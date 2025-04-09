@@ -1,0 +1,25 @@
+{
+    "short_name": "Dining Hall",
+    "name": "Mang'u High School Dining Hall Dashboard",
+    "icons": [
+      {
+        "src": "/icons/mangu_logo.png",
+        "type": "image/png",
+        "sizes": "512x512"
+      },
+      {
+        "src": "/icons/mangu_logo.png",
+        "type": "image/png",
+        "sizes": "192x192"
+      }
+    ],
+    "start_url": "/index.html",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#0077b6",
+    "description": "Manage dining hall data for students at Mang'u High School",
+    "dir": "ltr",
+    "lang": "en"
+  }
+  

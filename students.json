@@ -1,0 +1,39 @@
+[
+    {
+        "admissionNumber": "27345",
+        "name": "John Doe",
+        "class": "Form 2",
+        "stream": "Amherst",
+        "isMuslim": false,
+        "isSportsman": false,
+        "isCaptain": false
+    },
+    {
+        "admissionNumber": "26123",
+        "name": "Jane Smith",
+        "class": "Form 3",
+        "stream": "Berkley",
+        "isMuslim": true,
+        "isSportsman": false,
+        "isCaptain": false
+    },
+    {
+        "admissionNumber": "27834",
+        "name": "Alice Johnson",
+        "class": "Form 2",
+        "stream": "Cambridge",
+        "isMuslim": false,
+        "isSportsman": true,
+        "isCaptain": false
+    },
+    {
+        "admissionNumber": "25348",
+        "name": "Bob Brown",
+        "class": "Form 4",
+        "stream": "Dartmouth",
+        "isMuslim": false,
+        "isSportsman": false,
+        "isCaptain": true
+    }
+
+]
