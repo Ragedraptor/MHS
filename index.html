@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="utf-8"/>
-  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Dining Hall Dashboard</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
@@ -164,6 +164,59 @@
     tr:hover {
       background-color: #f1f1f1; /* Light gray background on row hover */
     }
+    /* ================= RESPONSIVE FIXES ONLY ================= */
+/* These won't affect desktop appearance */
+
+@media (max-width: 768px) {
+  /* Header adjustments */
+  .header {
+    flex-wrap: wrap;
+    gap: 15px;
+    padding: 15px 10px;
+  }
+
+  .header h1 {
+    width: 100%;
+    order: -1;
+    margin-bottom: 0;
+  }
+
+  /* Stats grid */
+  .stats {
+    flex-wrap: wrap;
+    gap: 15px;
+  }
+
+  .stat-box {
+    width: 100%;
+    margin: 0;
+  }
+
+  /* Search bar */
+  #search-bar {
+    width: 100%;
+    max-width: 100%;
+  }
+}
+
+@media (max-width: 480px) {
+  /* Table scrolling */
+  table {
+    display: block;
+    overflow-x: auto;
+    white-space: nowrap;
+  }
+
+  /* Icon spacing */
+  .header .icon-button {
+    margin: 0 5px;
+  }
+
+  /* Dashboard padding */
+  .dashboard {
+    padding: 15px;
+  }
+}
   </style>
 </head>
 <body class="login-bg">
