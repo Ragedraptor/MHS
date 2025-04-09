@@ -10,7 +10,7 @@
     },
     {
         "admissionNumber": "26123",
-        "name": "Jane Smith",
+        "name": "Jane Smith"
         "class": "Form 3",
         "stream": "Berkley",
         "isMuslim": true,
@@ -34,6 +34,7 @@
         "isMuslim": false,
         "isSportsman": false,
         "isCaptain": true
+        //Updated students.json with correct data
     }
 
 ]
