@@ -426,7 +426,232 @@
         <button onclick="closeSettings()" class="bg-gray-500 text-white px-4 py-2 mt-4">Close</button>
       </div>
     </div>
+    <script>
+      // Add these functions to your existing JavaScript
+  
+      // Open Settings Modal
+      function openSettings() {
+          document.getElementById('settings-modal').classList.remove('hidden');
+      }
+  
+      // Close Settings Modal
+      function closeSettings() {
+          document.getElementById('settings-modal').classList.add('hidden');
+      }
+  
+      // Existing backup/restore functions
+      function backupData() {
+          // ... (previous backup code) ...
+      }
+  
+      function restoreData(event) {
+          // ... (previous restore code) ...
+      }
+  </script>
+  
+  <!-- Add this to your CSS for modal responsiveness -->
+  <style>
+      /* Mobile-friendly modal styling */
+      #settings-modal {
+          backdrop-filter: blur(2px);
+      }
+  
+      #settings-modal > div {
+          width: 90%;
+          max-width: 400px;
+          margin: 1rem;
+      }
+  
+      @media (max-width: 640px) {
+          #settings-modal .actions {
+              flex-direction: column;
+              gap: 0.5rem;
+          }
+          
+          #settings-modal button {
+              width: 100%;
+              margin: 0;
+              padding: 0.75rem;
+          }
+      }
+  </style>
+  <!-- Add SheetJS library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
+<script>
+    // Backup to Excel
+    function backupData() {
+        const students = JSON.parse(localStorage.getItem("students")) || [];
+        if (students.length === 0) {
+            showNotification("No data to backup!", "error");
+            return;
+        }
+
+        try {
+            // Create worksheet
+            const ws = XLSX.utils.json_to_sheet(students.map(student => ({
+                "Admission No.": student.admissionNo,
+                "Name": student.name,
+                "Class": student.class,
+                "Status": student.status,
+                "Religious": student.religious,
+                "Leadership": student.leadership,
+                "Last Updated": student.lastUpdated
+            })));
+
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Students");
+
+            // Save file
+            XLSX.writeFile(wb, `students_backup_${new Date().toISOString().split('T')[0]}.xlsx`);
+            showNotification("Excel backup created successfully!");
+        } catch (error) {
+            console.error("Backup failed:", error);
+            showNotification("Backup failed! Please try again.", "error");
+        }
+    }
+
+    // Restore from Excel
+    function restoreData(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                
+                // Get first worksheet
+                const ws = workbook.Sheets[workbook.SheetNames[0]];
+                const jsonData = XLSX.utils.sheet_to_json(ws);
+
+                // Validate and format data
+                const students = jsonData.map(record => ({
+                    admissionNo: record["Admission No."]?.toString() || "",
+                    name: record["Name"]?.toString() || "",
+                    class: record["Class"]?.toString() || "",
+                    status: record["Status"]?.toString() || "Normal",
+                    religious: record["Religious"]?.toString() || "None",
+                    leadership: record["Leadership"]?.toString() || "None",
+                    lastUpdated: record["Last Updated"]?.toString() || new Date().toISOString().split('T')[0]
+                }));
+
+                // Save to localStorage
+                localStorage.setItem("students", JSON.stringify(students));
+                
+                // Refresh data
+                loadDashboardData();
+                showNotification("Data restored from Excel successfully!");
+                closeSettings();
+            } catch (error) {
+                console.error("Restore failed:", error);
+                showNotification("Invalid Excel file. Please check the format.", "error");
+            }
+        };
+
+        reader.onerror = function(error) {
+            showNotification("Error reading file. Please try again.", "error");
+        };
+
+        reader.readAsArrayBuffer(file);
+    }
+</script>
+<script>
+  async function restoreData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      
+      reader.onload = async function(e) {
+          try {
+              // Read Excel file
+              const data = new Uint8Array(e.target.result);
+              const workbook = XLSX.read(data, { type: 'array' });
+              const ws = workbook.Sheets[workbook.SheetNames[0]];
+              const excelData = XLSX.utils.sheet_to_json(ws);
+
+              // Get existing students
+              const existingStudents = JSON.parse(localStorage.getItem("students")) || [];
+              const admissionNumbers = new Set(existingStudents.map(s => s.admissionNo));
+
+              // Process Excel data
+              const newStudents = excelData.map(record => {
+                  // Data validation
+                  if (!record['Admission No.'] || !record['Name']) {
+                      throw new Error('Missing required fields in Excel file');
+                  }
+
+                  return {
+                      admissionNo: record['Admission No.'].toString().trim(),
+                      name: record['Name'].toString().trim(),
+                      class: record['Class']?.toString().trim() || '',
+                      status: record['Status']?.toString().trim() || 'Normal',
+                      religious: record['Religious']?.toString().trim() || 'None',
+                      leadership: record['Leadership']?.toString().trim() || 'None',
+                      lastUpdated: new Date().toISOString().split('T')[0]
+                  };
+              });
+
+              // Merge data: Update existing and add new
+              const updatedStudents = existingStudents.map(student => {
+                  const excelStudent = newStudents.find(s => 
+                      s.admissionNo === student.admissionNo
+                  );
+                  return excelStudent || student;
+              });
+
+              // Add completely new students
+              newStudents.forEach(student => {
+                  if (!admissionNumbers.has(student.admissionNo)) {
+                      updatedStudents.push(student);
+                  }
+              });
+
+              // Save merged data
+              localStorage.setItem("students", JSON.stringify(updatedStudents));
+              
+              // Refresh and notify
+              loadDashboardData();
+              showNotification(`
+                  ${newStudents.length} students processed:
+                  ${newStudents.length - (updatedStudents.length - existingStudents.length)} updated,
+                  ${updatedStudents.length - existingStudents.length} new added
+              `);
+              closeSettings();
+          } catch (error) {
+              console.error("Restore failed:", error);
+              showNotification(`Restore failed: ${error.message}`, "error");
+          }
+      };
+
+      reader.onerror = function() {
+          showNotification("Error reading file. Please try again.", "error");
+      };
+
+      reader.readAsArrayBuffer(file);
+  }
+</script>
+
+<!-- Add data validation CSS -->
+<style>
+  #settings-modal .file-input::file-selector-button {
+      background: #4CAF50;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+  }
+
+  #settings-modal .file-input:hover::file-selector-button {
+      background: #45a049;
+  }
+</style>
+<!-- Update your file input to accept Excel files -->
+<input type="file" id="file-input" accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden onchange="restoreData(event)">
     <!-- Action Buttons -->
     <div class="actions">
       <!-- Add Student Modal -->
