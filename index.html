@@ -217,6 +217,62 @@
     padding: 15px;
   }
 }
+/* ================= UNIVERSAL MOBILE FIXES ================= */
+@media (max-width: 640px) { /* Covers all phones */
+  .header {
+    flex-wrap: wrap;
+    gap: 12px;
+    padding: 12px;
+  }
+
+  .header h1 {
+    width: 100%;
+    order: 1;
+    font-size: 1.3rem;
+    margin: 0 0 8px 0;
+  }
+
+  /* Icon container */
+  .header-icons {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    order: 2;
+    flex: 1 1 100%;
+  }
+
+  .header .icon-button {
+    margin: 0;
+    font-size: 1.3rem;
+    padding: 6px;
+    flex: 0 0 auto;
+  }
+
+  /* Logout button */
+  .header > button:not(.icon-button) {
+    order: 3;
+    width: 100%;
+    margin-top: 8px;
+    padding: 10px;
+    font-size: 0.95rem;
+  }
+}
+
+@media (max-width: 375px) { /* Extra small phones */
+  .header .icon-button {
+    font-size: 1.1rem;
+    padding: 4px;
+  }
+  
+  .header h1 {
+    font-size: 1.1rem;
+  }
+}
+@media (max-width: 375px) {
+  /* Specific small phone adjustments */
+  .header h1 { font-size: 1.1rem; }
+  .icon-button { padding: 4px; }
+}
   </style>
 </head>
 <body class="login-bg">
