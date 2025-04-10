@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -72,7 +73,7 @@
 
         // Function to create a table for students
         function createTable(title, studentList) {
-            const tableDiv = document.createElement('div');
+            const tableDiv = document .createElement('div');
             tableDiv.className = "p-4 bg-white shadow-md rounded-lg w-full";
             const tableTitle = document.createElement('h3');
             tableTitle.className = "font-bold mb-2 text-lg text-gray-800";
@@ -87,7 +88,6 @@
                         <th class="py-2 px-4 border-b">Admission No.</th>
                         <th class="py-2 px-4 border-b">Name</th>
                         <th class="py-2 px-4 border-b">Class</th>
-                        <th class="py-2 px-4 border-b">Stream</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -95,8 +95,7 @@
                         <tr class="hover:bg-gray-100">
                             <td class="py-2 px-4 border-b">${student.admissionNo}</td>
                             <td class="py-2 px-4 border-b">${student.name}</td>
-                            <td class="py-2 px-4 border-b">${student.class.split(' ')[0]}</td>
-                            <td class="py-2 px-4 border-b">${student.class.split(' ')[1] || ''}</td>
+                            <td class="py-2 px-4 border-b">${student.class}</td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -110,7 +109,6 @@
             const classTables = document.getElementById('class-tables');
             classTables.innerHTML = '';
             
-            // Filter out Muslims and Sportsmen
             const generalStudents = students.filter(student => 
                 student.religious !== 'Muslim' && 
                 student.leadership !== 'Sportsman'
@@ -190,7 +188,7 @@
             document.getElementById('print-modal').classList.add('hidden');
         });
 
-        document.getElementById('print-sportsmen').addEventListener('click', () => {
+        document.getElementById ('print-sportsmen').addEventListener('click', () => {
             const sportsmen = students.filter(student => student.leadership === 'Sportsman');
             const printWindow = window.open('', '_blank');
             printWindow.document.write(`
