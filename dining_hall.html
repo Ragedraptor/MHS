@@ -50,45 +50,53 @@
     </div>
 
     <script>
-        let students = []; // Initialize an empty array for students
+        let students = [];
 
-       // Fetch student data from students.json
-fetch('students.json')
-    .then(response => response.json())
-    .then(data => {
-        students = data; // Assign the fetched data to the students array
-        console.log("Fetched students:", students); // Log the fetched data
-        displayStudents(); // Display students on page load
-    })
-    .catch(error => console.error('Error fetching student data:', error));
+        // Load students from localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const storedData = localStorage.getItem('students');
+                if (!storedData) {
+                    alert('No student data found! Redirecting to main page...');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                students = JSON.parse(storedData);
+                displayStudents();
+            } catch (error) {
+                console.error('Error loading student data:', error);
+                alert('Invalid student data format! Redirecting...');
+                window.location.href = 'index.html';
+            }
+        });
 
         // Function to create a table for students
         function createTable(title, studentList) {
             const tableDiv = document.createElement('div');
-            tableDiv.className = "p-4 bg-white shadow-md rounded-lg w-full"; // Set width to full
+            tableDiv.className = "p-4 bg-white shadow-md rounded-lg w-full";
             const tableTitle = document.createElement('h3');
             tableTitle.className = "font-bold mb-2 text-lg text-gray-800";
             tableTitle.innerText = title;
             tableDiv.appendChild(tableTitle);
 
             const table = document.createElement('table');
-            table.className = "min-w-full border-collapse border border-gray-300"; // Ensure the table has proper borders
+            table.className = "min-w-full border-collapse border border-gray-300";
             table.innerHTML = `
                 <thead>
                     <tr class="bg-gray-200">
-                        <th class="py-2 px-4 border-b">Admission Number</th>
+                        <th class="py-2 px-4 border-b">Admission No.</th>
                         <th class="py-2 px-4 border-b">Name</th>
                         <th class="py-2 px-4 border-b">Class</th>
-                        <th class="py-2 px-4 border-b">Stream</th> <!-- New column for Stream -->
+                        <th class="py-2 px-4 border-b">Stream</th>
                     </tr>
                 </thead>
                 <tbody>
                     ${studentList.map(student => `
                         <tr class="hover:bg-gray-100">
-                            <td class="py-2 px-4 border-b">${student.admissionNumber}</td>
+                            <td class="py-2 px-4 border-b">${student.admissionNo}</td>
                             <td class="py-2 px-4 border-b">${student.name}</td>
-                            <td class="py-2 px-4 border-b">${student.class}</td>
-                            <td class="py-2 px-4 border-b">${student.stream}</td> <!-- Populate Stream -->
+                            <td class="py-2 px-4 border-b">${student.class.split(' ')[0]}</td>
+                            <td class="py-2 px-4 border-b">${student.class.split(' ')[1] || ''}</td>
                         </tr>
                     `).join('')}
                 </tbody>
@@ -97,92 +105,109 @@ fetch('students.json')
             return tableDiv;
         }
 
-        // Function to display all students
-function displayStudents() {
-    const classTables = document.getElementById('class-tables');
-    classTables.innerHTML = ''; // Clear previous content
-    const studentTable = createTable('All Students', students);
-    classTables.appendChild(studentTable);
-}
+        // Display functions
+        function displayStudents() {
+            const classTables = document.getElementById('class-tables');
+            classTables.innerHTML = '';
+            
+            // Filter out Muslims and Sportsmen
+            const generalStudents = students.filter(student => 
+                student.religious !== 'Muslim' && 
+                student.leadership !== 'Sportsman'
+            );
+            
+            const studentTable = createTable('General Students Arrangement', generalStudents);
+            classTables.appendChild(studentTable);
+        }
 
-// Function to display Muslim students
-function displayMuslims() {
-    const classTables = document.getElementById('class-tables');
-    classTables.innerHTML = ''; // Clear previous content
-    const muslims = students.filter(student => student.isMuslim);
-    const muslimTable = createTable('Muslims', muslims);
-    classTables.appendChild(muslimTable);
-}
+        function displayMuslims() {
+            const classTables = document.getElementById('class-tables');
+            classTables.innerHTML = '';
+            const muslims = students.filter(student => student.religious === 'Muslim');
+            classTables.appendChild(createTable('Muslim Students', muslims));
+        }
 
-// Function to display sportsmen
-function displaySportsmen() {
-    const classTables = document.getElementById('class-tables');
-    classTables.innerHTML = ''; // Clear previous content
-    const sportsmen = students.filter(student => student.isSportsman);
-    const sportsmenTable = createTable('Sportsmen', sportsmen);
-    classTables.appendChild(sportsmenTable);
-}
+        function displaySportsmen() {
+            const classTables = document.getElementById('class-tables');
+            classTables.innerHTML = '';
+            const sportsmen = students.filter(student => student.leadership === 'Sportsman');
+            classTables.appendChild(createTable('Sportsmen', sportsmen));
+        }
 
-// Event listeners for buttons
-document.getElementById('show-students').addEventListener('click', displayStudents);
-document.getElementById('show-muslims').addEventListener('click', displayMuslims);
-document.getElementById('show-sportsmen').addEventListener('click', displaySportsmen);
+        // Event Listeners
+        document.getElementById('show-students').addEventListener('click', displayStudents);
+        document.getElementById('show-muslims').addEventListener('click', displayMuslims);
+        document.getElementById('show-sportsmen').addEventListener('click', displaySportsmen);
 
-        // Show the print modal
+        // Print functionality
         document.getElementById('print-button').addEventListener('click', () => {
             document.getElementById('print-modal').classList.remove('hidden');
         });
 
-        // Close the print modal
         document.getElementById('close-modal').addEventListener('click', () => {
             document.getElementById('print-modal').classList.add('hidden');
         });
 
-        // Print functionality for students
         document.getElementById('print-students').addEventListener('click', () => {
+            const generalStudents = students.filter(student => 
+                student.religious !== 'Muslim' && 
+                student.leadership !== 'Sportsman'
+            );
+            
             const printWindow = window.open('', '_blank');
-            printWindow.document.write('<html><head><title>Print Students</title>');
-            printWindow.document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">');
-            printWindow.document.write('</head><body>');
-            printWindow.document.write(createTable('All Students', students).outerHTML);
-            printWindow.document.write('</body></html>');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>General Students Arrangement</title>
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+                    </head>
+                    <body>
+                        ${createTable('General Students Arrangement', generalStudents).outerHTML}
+                    </body>
+                </html>
+            `);
             printWindow.document.close();
             printWindow.print();
-            document.getElementById('print-modal').classList.add('hidden'); // Hide the modal
+            document.getElementById('print-modal').classList.add('hidden');
         });
 
-        // Print functionality for Muslims
         document.getElementById('print-muslims').addEventListener('click', () => {
-            const muslims = students.filter(student => student.isMuslim);
+            const muslims = students.filter(student => student.religious === 'Muslim');
             const printWindow = window.open('', '_blank');
-            printWindow.document.write('<html><head><title>Print Muslims</title>');
-            printWindow.document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">');
-            printWindow.document.write('</head><body>');
-            printWindow.document.write(createTable('Muslims', muslims).outerHTML);
-            printWindow.document.write('</body></html>');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Muslim Students Arrangement</title>
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+                    </head>
+                    <body>
+                        ${createTable('Muslim Students', muslims).outerHTML}
+                    </body>
+                </html>
+            `);
             printWindow.document.close();
             printWindow.print();
-            document.getElementById('print-modal').classList.add('hidden'); // Hide the modal
+            document.getElementById('print-modal').classList.add('hidden');
         });
 
-        // Print functionality for sportsmen
         document.getElementById('print-sportsmen').addEventListener('click', () => {
-            const sportsmen = students.filter(student => student.isSportsman);
+            const sportsmen = students.filter(student => student.leadership === 'Sportsman');
             const printWindow = window.open('', '_blank');
-            printWindow.document.write('<html><head><title>Print Sportsmen</title>');
-            printWindow.document.write('<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">');
-            printWindow.document.write('</head><body>');
-            printWindow.document.write(createTable('Sportsmen', sportsmen).outerHTML);
-            printWindow.document.write('</body></html>');
+            printWindow.document.write(`
+                <html>
+                    <head>
+                        <title>Sportsmen Arrangement</title>
+                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+                    </head>
+                    <body>
+                        ${createTable('Sportsmen', sportsmen).outerHTML}
+                    </body>
+                </html>
+            `);
             printWindow.document.close();
             printWindow.print();
-            document.getElementById('print-modal').classList.add('hidden'); // Hide the modal
+            document.getElementById('print-modal').classList.add('hidden');
         });
-
-        // Event listeners for buttons
-        document.getElementById('show-students').addEventListener('click', displayStudents);
-        document.getElementById('show-muslims').addEventListener('click', displayMuslims);
-        document.getElementById('show-sportsmen').addEventListener('click', displaySportsmen);
     </script>
 </body>
 </html>
