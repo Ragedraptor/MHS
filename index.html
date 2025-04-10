@@ -1234,7 +1234,19 @@ function updateStats(students) {
       }
   };
 </script>
-
+<script>
+  // Save students to localStorage whenever updated
+  function saveStudents(students) {
+      localStorage.setItem('students', JSON.stringify(students));
+  }
+  
+  // Example usage when adding a student
+  function addStudent(newStudent) {
+      const students = JSON.parse(localStorage.getItem('students')) || [];
+      students.push(newStudent);
+      saveStudents(students);
+  }
+  </script>
 </body>
 </html>    
 
