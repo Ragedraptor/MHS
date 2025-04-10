@@ -18,6 +18,14 @@
       background-color: #f4f4f4;
     }
 
+    #login-form {
+      height: 100vh; /* Full height for the login form */
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      overflow: hidden; /* Prevent overflow */
+    }
+
     .dashboard {
       display: none; /* Ensure dashboard is hidden by default */
       padding: 20px;
@@ -125,7 +133,7 @@
     }
 
     /* Style for the login box */
-      .login-box {
+    .login-box {
       background-color: #000; /* Black background for the login box */
       color: white; /* White text color */
       border-radius: 8px;
@@ -273,14 +281,13 @@
   <!-- Login Form -->
   <div id="login-form" class="h-screen flex items-center justify-center">
     <div class="login-box max-w-md w-full">
-      <img class="mx-auto h-32 w-32 mb-4" src="mangu_logo.jpg" alt="Mang'u High School Logo" />
+      <img class="mx-auto h-32 w-32 mb-4" src="mangu_logo.jpg" alt="Mang'u High School Logo" /> <!-- Logo added here -->
       <h2 class="text-3xl font-bold mb-6 text-center">Login</h2>
-      <form onsubmit="return validateLogin(event)">
-        <div class="mb-4">
+      <form onsubmit="return validateLogin(event)">        <div class="mb-4">
           <label class="block text-lg" for="username">Username</label>
           <input class="w-full px-4 py-3 border rounded-lg" id="username" required type="text" placeholder="Enter your username"/>
         </div>
-                <div class="mb-6">
+        <div class="mb-6">
           <label class="block text-lg" for="password">Password</label>
           <input class="w-full px-4 py-3 border rounded-lg" id="password" required type="password" placeholder="Enter your password"/>
         </div>
@@ -289,8 +296,8 @@
     </div>
   </div>
 
-  <!-- Dashboard -->
-  <div id="dashboard" class="dashboard">
+   <!-- Dashboard -->
+   <div id="dashboard" class="dashboard">
     <!-- Header -->
     <div class="header">
       <img class="h-16 w-16" src="mangu_logo.jpg" alt="Mang'u High School Logo" />
@@ -314,18 +321,75 @@
       </div>
     </div>
 
+   
+
+  <script>
+
+
+    // Call the function when the dashboard is loaded
+    window.onload = function() {
+      setLastUpdated();
+      document.getElementById('dashboard').style.display = 'block'; // Show the dashboard
+      document.getElementById('login-form').style.display = 'none'; // Hide the login form
+    };
+
+    // Function to handle Dining Hall button click
+    function openDiningHall() {
+      // Redirect to the dining hall page
+      window.location.href = 'dining_hall.html'; // Change this to your actual dining hall page URL
+    }
+  </script>
+    </div>
+  </div>
     <!-- Quick Stats -->
     <div class="stats">
       <div class="stat-box">
-        <h3>Total Students</h3>
-        <p id="total-students">0</p>
+          <h3>Total Students</h3>
+          <p id="total-students">0</p>
       </div>
       <div class="stat-box">
-        <h3>Sent Home</h3>
-        <p id="sent-home">0</p>
+          <h3>Sent Home</h3>
+          <p id="sent-home">0</p>
       </div>
-    </div>
+  </div>
+    <script>
+      function updateStats(students) {
+    const totalStudents = students.length; // Total number of students
+    const sentHomeCount = students.filter(student => student.status === 'Suspended' || student.status === 'Expelled').length; // Count of students sent home
 
+    // Update the stats in the dashboard
+    document.getElementById('total-students').innerText = totalStudents;
+    document.getElementById('sent-home').innerText = sentHomeCount;
+}
+      // Function to update the stats on the page
+      function updateStats(students) {
+    const totalStudents = students.length; // Total number of students
+    const sentHomeCount = students.filter(student => 
+        student.status === 'Suspended' || 
+        student.status === 'Sick'
+    ).length; // Count of students sent home or sick
+
+    // Update the stats in the dashboard
+    document.getElementById('total-students').innerText = totalStudents;
+    document.getElementById('sent-home').innerText = sentHomeCount;
+}
+
+          // Loop through the rows to count "Sent Home"
+          for (let i = 1; i < table.rows.length; i++) { // Start from 1 to skip header
+              const status = table.rows[i].cells[1].innerText; // Get the status cell
+              if (status === 'Sent Home') {
+                  sentHomeCount++;
+              }
+          }
+
+          // Update the stats
+          document.getElementById('total-students').innerText = totalStudents;
+          document.getElementById('sent-home').innerText = sentHomeCount;
+      }
+
+      // Call the updateStats function to fetch and display the data
+      updateStats();
+  </script>
     <!-- Search & Filters -->
     <div class="actions">
       <input type="text" id="search-bar" placeholder="Search by Name or Admission No." class="border p-2">
@@ -351,23 +415,6 @@
       <button onclick="printClassList()" class="bg-yellow-500 text-white px-4 py-2 ml-2">Print Class List</button>
     </div>
 
-    <!-- Student Table -->
-    <table class="w-full">
-      <thead>
-        <tr>
-          <th>Admission No.</th>
-          <th>Name</th>
-          <th>Class</th>
-          <th>Status</th>
-          <th>Religious Status</th>
-          <th>Leadership</th>
-          <th>Last Updated</th>
-        </tr>
-      </thead>
-      <tbody id="student-table">     
-      </tbody>
-    </table>
-
     <!-- Settings Modal -->
     <div id="settings-modal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
       <div class="bg-white p-6 rounded-lg shadow-lg w-96">
@@ -375,234 +422,831 @@
         <div class="actions">
           <button onclick="backupData()" class="bg-blue-500 text-white px-4 py-2">Backup Data</button>
           <input type="file" id="file-input" accept=".json" class="ml-2" onchange="restoreData(event)" style="display: none;" />
-          <button onclick="document.getElementBy
-                      'file-input').click();" class="bg-green-500 text-white px-4 py-2">Restore Data</button>
+          <button onclick="document.getElementById('file-input').click();" class="bg-green-500 text-white px-4 py-2">Restore Data</button>
         </div>
         <button onclick="closeSettings()" class="bg-gray-500 text-white px-4 py-2 mt-4">Close</button>
       </div>
     </div>
-
     <script>
+      // Add these functions to your existing JavaScript
+  
       // Open Settings Modal
       function openSettings() {
           document.getElementById('settings-modal').classList.remove('hidden');
       }
-
+  
       // Close Settings Modal
       function closeSettings() {
           document.getElementById('settings-modal').classList.add('hidden');
       }
-
-      // Backup to Excel
+  
+      // Existing backup/restore functions
       function backupData() {
-          const students = JSON.parse(localStorage.getItem("students")) || [];
-          if (students.length === 0) {
-              showNotification("No data to backup!", "error");
-              return;
-          }
-
-          try {
-              // Create worksheet
-              const ws = XLSX.utils.json_to_sheet(students.map(student => ({
-                  "Admission No.": student.admissionNo,
-                  "Name": student.name,
-                  "Class": student.class,
-                  "Status": student.status,
-                  "Religious": student.religious,
-                  "Leadership": student.leadership,
-                  "Last Updated": student.lastUpdated
-              })));
-
-              // Create workbook
-              const wb = XLSX.utils.book_new();
-              XLSX.utils.book_append_sheet(wb, ws, "Students");
-
-              // Save file
-              XLSX.writeFile(wb, `students_backup_${new Date().toISOString().split('T')[0]}.xlsx`);
-              showNotification("Excel backup created successfully!");
-          } catch (error) {
-              console.error("Backup failed:", error);
-              showNotification("Backup failed! Please try again.", "error");
-          }
+          // ... (previous backup code) ...
       }
-
-      // Restore from Excel
+  
       function restoreData(event) {
-          const file = event.target.files[0];
-          if (!file) return;
-
-          const reader = new FileReader();
-          reader.onload = function(e) {
-              try {
-                  const data = new Uint8Array(e.target.result);
-                  const workbook = XLSX.read(data, { type: 'array' });
-                  
-                  // Get first worksheet
-                  const ws = workbook.Sheets[workbook.SheetNames[0]];
-                  const jsonData = XLSX.utils.sheet_to_json(ws);
-
-                  // Validate and format data
-                  const students = jsonData.map(record => ({
-                      admissionNo: record["Admission No."]?.toString() || "",
-                      name: record["Name"]?.toString() || "",
-                      class: record["Class"]?.toString() || "",
-                      status: record["Status"]?.toString() || "Normal",
-                      religious: record["Religious"]?.toString() || "None",
-                      leadership: record["Leadership"]?.toString() || "None",
-                      lastUpdated: record["Last Updated"]?.toString() || new Date().toISOString().split('T')[0]
-                  }));
-
-                  // Save to localStorage
-                  localStorage.setItem("students", JSON.stringify(students));
-                  
-                  // Refresh data
-                  loadDashboardData();
-                  showNotification("Data restored from Excel successfully!");
-                  closeSettings();
-              } catch (error) {
-                  console.error("Restore failed:", error);
-                  showNotification("Invalid Excel file. Please check the format.", "error");
-              }
-          };
-
-          reader.onerror = function(error) {
-              showNotification("Error reading file. Please try again.", "error");
-          };
-
-          reader.readAsArrayBuffer(file);
+          // ... (previous restore code) ...
       }
-
-      function showNotification(message) {
-          const notification = document.createElement("div");
-          notification.className = "bg-green-500 text-white p-2 rounded mb-4";
-          notification.innerText = message;
-          document.body.prepend(notification);
-          setTimeout(() => notification.remove(), 3000); // Remove after 3 seconds
+  </script>
+  
+  <!-- Add this to your CSS for modal responsiveness -->
+  <style>
+      /* Mobile-friendly modal styling */
+      #settings-modal {
+          backdrop-filter: blur(2px);
       }
-
-      // Load student data into the dashboard
-      function loadDashboardData() {
-          const students = JSON.parse(localStorage.getItem("students")) || [];
+  
+      #settings-modal > div {
+          width: 90%;
+          max-width: 400px;
+          margin: 1rem;
+      }
+  
+      @media (max-width: 640px) {
+          #settings-modal .actions {
+              flex-direction: column;
+              gap: 0.5rem;
+          }
           
-          // Sort students by admission number in ascending order
-          students.sort((a, b) => a.admissionNo.localeCompare(b.admissionNo, undefined, { numeric: true }));
-
-          // Populate the student table
-          document.getElementById("student-table").innerHTML = students.map(s => `
-              <tr>
-                  <td>${s.admissionNo}</td>
-                  <td>${s.name}</td>
-                  <td>${s.class}</td>
-                  <td>${s.status}</td>
-                  <td>${s.religious}</td>
-                  <td>${s.leadership}</td>
-                  <td>${s.lastUpdated}</td>
-              </tr>
-          `).join("");
-
-          // Update stats
-                    updateStats(students);
-      }
-
-      function updateStats(students) {
-          const totalStudents = students.length; // Total number of students
-          const sentHomeCount = students.filter(student => 
-              student.status === 'Suspended' || 
-              student.status === 'Sick'
-          ).length; // Count of students sent home or sick
-
-          // Update the stats in the dashboard
-          document.getElementById('total-students').innerText = totalStudents; // Show total students
-          document.getElementById('sent-home').innerText = sentHomeCount; // Show students sent home or sick
-      }
-
-      // Validate login credentials
-      function validateLogin(event) {
-          event.preventDefault();
-          const username = document.getElementById("username").value;
-          const password = document.getElementById("password").value;
-
-          // Simple hardcoded login check
-          if (username === "MHSDININGHALL" && password === "Mangu@1925") {
-              sessionStorage.setItem("loggedIn", "true");
-              showDashboard();
-          } else {
-              alert("Invalid username or password. Try again.");
+          #settings-modal button {
+              width: 100%;
+              margin: 0;
+              padding: 0.75rem;
           }
       }
+  </style>
+  <!-- Add SheetJS library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
 
-      // Show the dashboard
-      function showDashboard() {
-          document.getElementById("login-form").style.display = "none"; // Hide the login form
-          document.getElementById("dashboard").style.display = "block"; // Show the dashboard
-          document.body.classList.remove("login-bg"); // Remove the login background
-          loadDashboardData(); // Load the dashboard data
-      }
+<script>
+    // Backup to Excel
+    function backupData() {
+        const students = JSON.parse(localStorage.getItem("students")) || [];
+        if (students.length === 0) {
+            showNotification("No data to backup!", "error");
+            return;
+        }
 
-      // Logout function
-      function logout() {
-          sessionStorage.removeItem("loggedIn");
-          document.getElementById("dashboard").style.display = "none"; // Hide the dashboard
-          document.getElementById("login-form").style.display = "flex"; // Show the login form
-          document.body.classList.add("login-bg"); // Add the login background
-      }
+        try {
+            // Create worksheet
+            const ws = XLSX.utils.json_to_sheet(students.map(student => ({
+                "Admission No.": student.admissionNo,
+                "Name": student.name,
+                "Class": student.class,
+                "Status": student.status,
+                "Religious": student.religious,
+                "Leadership": student.leadership,
+                "Last Updated": student.lastUpdated
+            })));
 
-      // Search for students in the table
-      function searchStudent() {
-          const searchQuery = document.getElementById("search-bar").value.toLowerCase();
-          const tableRows = document.querySelectorAll("#student-table tr");
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Students");
 
-          tableRows.forEach(row => {
-              const studentName = row.cells[1].innerText.toLowerCase();
-              const admissionNo = row.cells[0].innerText.toLowerCase();
-              const status = row.cells[3].innerText.toLowerCase();
-              const religiousStatus = row.cells[4].innerText.toLowerCase();
-              
-              // Check if search query matches any of the fields
-              if (studentName.includes(searchQuery) || admissionNo.includes(searchQuery) ||
-                  status.includes(searchQuery) || religiousStatus.includes(searchQuery)) {
-                  row.style.display = ""; // Show the row
-              } else {
-                  row.style.display = "none"; // Hide the row
-              }
-          });
-      }
+            // Save file
+            XLSX.writeFile(wb, `students_backup_${new Date().toISOString().split('T')[0]}.xlsx`);
+            showNotification("Excel backup created successfully!");
+        } catch (error) {
+            console.error("Backup failed:", error);
+            showNotification("Backup failed! Please try again.", "error");
+        }
+    }
 
-      // Initialize dashboard on page load
-      window.onload = function () {
-          if (sessionStorage.getItem("loggedIn")) {
-              showDashboard(); // Show the dashboard if logged in
-          } else {
-              document.getElementById("login-form").style.display = "flex"; // Show the login form if not logged in
-              document.getElementById("dashboard").style.display = "none"; // Ensure the dashboard is hidden
-          }
+    // Restore from Excel
+    function restoreData(event) {
+        const file = event.target.files[0];
+        if (!file) return;
 
-          // Populate local storage with demo students if it's empty
-          if (!localStorage.getItem("students")) {
-              const initialStudents = [
-                  {
-                      "admissionNo": "12345",
-                      "name": "John Doe",
-                      "class": "2 Cornell",
-                      "status": "Sick",
-                      "religious": "None",
-                      "leadership": "Sportsman",
-                      "lastUpdated": "2023-10-01"
-                  },
-                  {
-                      "admissionNo": "12346",
-                      "name": "Jane Smith",
-                      "class": "2 Cornell",
-                      "status": "Normal",
-                      "religious": "Muslim",
-                      "leadership": "Captain",
-                      "lastUpdated": "2023-10-02"
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                
+                // Get first worksheet
+                const ws = workbook.Sheets[workbook.SheetNames[0]];
+                const jsonData = XLSX.utils.sheet_to_json(ws);
+
+                // Validate and format data
+                const students = jsonData.map(record => ({
+                    admissionNo: record["Admission No."]?.toString() || "",
+                    name: record["Name"]?.toString() || "",
+                    class: record["Class"]?.toString() || "",
+                    status: record["Status"]?.toString() || "Normal",
+                    religious: record["Religious"]?.toString() || "None",
+                    leadership: record["Leadership"]?.toString() || "None",
+                    lastUpdated: record["Last Updated"]?.toString() || new Date().toISOString().split('T')[0]
+                }));
+
+                // Save to localStorage
+                localStorage.setItem("students", JSON.stringify(students));
+                
+                // Refresh data
+                loadDashboardData();
+                showNotification("Data restored from Excel successfully!");
+                closeSettings();
+            } catch (error) {
+                console.error("Restore failed:", error);
+                showNotification("Invalid Excel file. Please check the format.", "error");
+            }
+        };
+
+        reader.onerror = function(error) {
+            showNotification("Error reading file. Please try again.", "error");
+        };
+
+        reader.readAsArrayBuffer(file);
+    }
+</script>
+<script>
+  async function restoreData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      
+      reader.onload = async function(e) {
+          try {
+              // Read Excel file
+              const data = new Uint8Array(e.target.result);
+              const workbook = XLSX.read(data, { type: 'array' });
+              const ws = workbook.Sheets[workbook.SheetNames[0]];
+              const excelData = XLSX.utils.sheet_to_json(ws);
+
+              // Get existing students
+              const existingStudents = JSON.parse(localStorage.getItem("students")) || [];
+              const admissionNumbers = new Set(existingStudents.map(s => s.admissionNo));
+
+              // Process Excel data
+              const newStudents = excelData.map(record => {
+                  // Data validation
+                  if (!record['Admission No.'] || !record['Name']) {
+                      throw new Error('Missing required fields in Excel file');
                   }
-              ];
-              localStorage.setItem("students", JSON.stringify(initialStudents));
+
+                  return {
+                      admissionNo: record['Admission No.'].toString().trim(),
+                      name: record['Name'].toString().trim(),
+                      class: record['Class']?.toString().trim() || '',
+                      status: record['Status']?.toString().trim() || 'Normal',
+                      religious: record['Religious']?.toString().trim() || 'None',
+                      leadership: record['Leadership']?.toString().trim() || 'None',
+                      lastUpdated: new Date().toISOString().split('T')[0]
+                  };
+              });
+
+              // Merge data: Update existing and add new
+              const updatedStudents = existingStudents.map(student => {
+                  const excelStudent = newStudents.find(s => 
+                      s.admissionNo === student.admissionNo
+                  );
+                  return excelStudent || student;
+              });
+
+              // Add completely new students
+              newStudents.forEach(student => {
+                  if (!admissionNumbers.has(student.admissionNo)) {
+                      updatedStudents.push(student);
+                  }
+              });
+
+              // Save merged data
+              localStorage.setItem("students", JSON.stringify(updatedStudents));
+              
+              // Refresh and notify
+              loadDashboardData();
+              showNotification(`
+                  ${newStudents.length} students processed:
+                  ${newStudents.length - (updatedStudents.length - existingStudents.length)} updated,
+                  ${updatedStudents.length - existingStudents.length} new added
+              `);
+              closeSettings();
+          } catch (error) {
+              console.error("Restore failed:", error);
+              showNotification(`Restore failed: ${error.message}`, "error");
           }
       };
-    </script>
-  </div>
-</body>
-</html>
+
+      reader.onerror = function() {
+          showNotification("Error reading file. Please try again.", "error");
+      };
+
+      reader.readAsArrayBuffer(file);
+  }
+</script>
+
+<!-- Add data validation CSS -->
+<style>
+  #settings-modal .file-input::file-selector-button {
+      background: #4CAF50;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+  }
+
+  #settings-modal .file-input:hover::file-selector-button {
+      background: #45a049;
+  }
+</style>
+<!-- Update your file input to accept Excel files -->
+<input type="file" id="file-input" accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden onchange="restoreData(event)">
+    <!-- Action Buttons -->
+    <div class="actions">
+      <!-- Add Student Modal -->
+      <div id="add-student-modal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+          <h2 class="text-2xl font-bold mb-4">Add Student</h2>
+          <form id="add-student-form">
+            <label class="block">Admission No.</label>
+            <input type="text" id="admission-no" class="border w-full p-2 mb-2" required style="color: white; background-color: #333;"/>
+  
+            <label class="block">Name</label>
+            <input type="text" id="student-name" class="border w-full p-2 mb-2" required style="color: white; background-color: #333;"/>
+  
+            <label class="block">Class</label>
+            <select id="student-class" class="border w-full p-2 mb-2" required>
+              <option value="Form 2">Form 2</option>
+              <option value="Form 3">Form 3</option>
+              <option value="Form 4">Form 4</option>
+            </select>
+  
+            <label class="block">Stream</label>
+            <select id="student-stream" class="border w-full p-2 mb-2" required>
+              <!-- Options will be populated by JavaScript -->
+            </select>
+  
+            <label class="block">Status</label>
+            <select id="Status" class="border w-full p-2 mb-4">
+              <option value="Normal">Normal</option>
+            </select>
+  
+            <label class="block">Leadership</label>
+            <select id="leadership" class="border w-full p-2 mb-4">
+              <option value="None">None</option>
+              <option value="Captain">Captain</option>
+              <option value="Sportsman">Sportsman</option>
+            </select>
+  
+            <label class="block">Religious Status</label>
+            <select id="religion" class="border w-full p-2 mb-4">
+              <option value="CU">CU</option>
+              <option value="Muslim">Muslim</option>
+              <option value="SDA">SDA</option>
+              <option value="YCS">YCS</option>
+            </select>
+  
+            <div class="flex justify-between  mt-4">
+              <button type="button" onclick="closeAddStudentModal()" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
+              <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+  
+      <!-- Add Student Button -->
+      <button onclick="openAddStudentModal()" class="bg-green-500 text-white px-4 py-2">Add Student</button>
+  
+      <script>
+        const streams = [
+          "Amherst",
+          "Berkley",
+          "Cambridge",
+          "Cape",
+          "Chicago",
+          "Columbia",
+          "Cornell",
+          "Dartmouth",
+          "Dayton",
+          "Duke",
+          "Edinburgh",
+          "Harvard",
+          "Hopkins",
+          "MIT",
+          "Michigan",
+          "Oxford",
+          "Pittsburgh",
+          "Princeton",
+          "Stanford",
+          "Yale",
+          "Zurich"
+        ].sort(); // Sort streams alphabetically
+
+        // Function to populate stream options
+        function populateStreamOptions() {
+          const classSelect = document.getElementById("class-select");
+          const streamSelect = document.getElementById("stream-select");
+          
+          // Clear previous stream options
+          streamSelect.innerHTML = '<option value="">Select Stream</option>';
+
+          // Get the selected class
+          const selectedClass = classSelect.value;
+
+          // Define streams for each class
+          const streamsByClass = {
+            "Form 2": streams,
+            "Form 3": streams,
+            "Form 4": streams
+          };
+
+          // Populate the stream dropdown based on the selected class
+          if (selectedClass && streamsByClass[selectedClass]) {
+            streamsByClass[selectedClass].forEach(stream => {
+              const option = document.createElement("option");
+              option.value = stream;
+              option.textContent = stream;
+              streamSelect.appendChild(option);
+            });
+          }
+        }
+
+        function openAddStudentModal() {
+          document.getElementById("add-student-modal").classList.remove("hidden");
+          populateStudentStreamOptions(); // Populate streams for the add student modal
+        }
+  
+        function closeAddStudentModal() {
+          document.getElementById("add-student-modal").classList.add("hidden");
+        }
+
+        function populateStudentStreamOptions() {
+          const studentClass = document.getElementById("student-class").value;
+          const studentStreamSelect = document.getElementById("student-stream");
+          studentStreamSelect.innerHTML = '<option value="">Select Stream</option>'; // Clear previous options
+
+          if (studentClass) {
+            streams.forEach(stream => {
+              const option = document.createElement("option");
+              option.value = stream;
+              option.textContent = stream;
+              studentStreamSelect.appendChild(option);
+            });
+          }
+        }
+        document.getElementById("add-student-form").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    const admissionNo = document.getElementById("admission-no").value;
+    const name = document.getElementById("student-name").value;
+    const studentClass = document.getElementById("student-class").value;
+    const studentStream = document.getElementById("student-stream").value;
+    const status = document.getElementById("Status").value; // Correct ID
+    const religion = document.getElementById("religion").value;
+    const leadership = document.getElementById("leadership").value;
+    const lastUpdated = new Date().toISOString().split('T')[0];
+
+    // Debugging logs
+    console.log("Form submitted");
+    console.log("Admission No:", admissionNo);
+    console.log("Name:", name);
+    console.log("Class:", studentClass);
+    console.log("Stream:", studentStream);
+    console.log("Status:", status);
+
+    // Check for duplicate admission number
+    const students = JSON.parse(localStorage.getItem("students")) || [];
+    const duplicateStudent = students.find(student => student.admissionNo === admissionNo);
+    if (duplicateStudent) {
+        alert("A student with this admission number already exists.");
+        return; // Prevent adding the student
+    }
+
+    // Combine class and stream
+    const combinedClass = `${studentClass} ${studentStream}`;
+
+    const newStudent = {
+        admissionNo,
+        name,
+        class: combinedClass,
+        stream: studentStream,
+        status,
+        religious: religion,
+        leadership,
+        lastUpdated
+    };
+
+    // Add new student to the array
+    students.push(newStudent);
+
+    // Save updated students array back to localStorage
+    localStorage.setItem("students", JSON.stringify(students));
+     // Update the table and total count
+     loadDashboardData();
+          closeAddStudentModal();
+          showNotification("Student added successfully!"); // Show notification
+        });
+
+        function showNotification(message) {
+            const notification = document.createElement("div");
+            notification.className = "bg-green-500 text-white p-2 rounded mb-4";
+            notification.innerText = message;
+            document.body.prepend(notification);
+            setTimeout(() => notification.remove(), 3000); // Remove after 3 seconds
+        }
+
+        function printClassList() {
+          const selectedClass = document.getElementById("class-select").value;
+          const selectedStream = document.getElementById("stream-select").value;
+          const students = JSON.parse(localStorage.getItem("students")) || [];
+          
+          // Filter students by selected class and stream
+          const filteredStudents = students.filter(student => 
+            student.class === `${selectedClass} ${selectedStream}`
+          );
+          
+          if (filteredStudents.length === 0) {
+            alert("No students found in this class and stream.");
+            return;
+          }
+
+          // Sort students by admission number
+          filteredStudents.sort((a, b) => a.admissionNo.localeCompare(b.admissionNo));
+
+          // Create a printable HTML string
+          let printContent = '<div style="text-align: center;">';
+          printContent += '<img src="mangu_logo.jpg" alt="Mang\'u High School Logo" style="width: 100px; height: auto;"/>'; // Adjust logo size as needed
+          printContent += `<h1 style="text-decoration: underline; font-weight: bold;">${selectedClass} - ${selectedStream}</h1>`;
+          printContent += '</div>';
+
+          printContent += '<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">';
+          printContent += '<tr><th style="border: 1px solid black; padding: 8px;">#</th><th style="border: 1px solid black; padding: 8px;">Admission No.</th><th style="border: 1px solid black; padding: 8px;">Name</th><th style="border: 1px solid black; padding: 8px;"></th></tr>';
+          
+          filteredStudents.forEach((student, index) => {
+            printContent += `<tr>
+              <td style="border: 1px solid black; padding: 8px;">${index + 1}</td>
+              <td style="border: 1px solid black; padding: 8px;">${student.admissionNo}</td>
+              <td style="border: 1px solid black; padding: 8px;">${student.name}</td>
+              <td style="border: 1px solid black; padding: 8px;"></td> <!-- Blank cell for data -->
+            </tr>`;
+          });
+          
+          printContent += '</table>';
+
+          // Open a new window for printing
+          const printWindow = window.open('', '', 'height=600,width=800');
+          printWindow.document.write('<html><head><title>Class Lists</title>');
+          printWindow.document.write('<style>body { font-family: Arial, sans-serif; } table { border: 1px solid black; width: 100%; border-collapse: collapse; } th, td { padding: 8px; text-align: left; border: 1px solid black; }</style>');
+          printWindow.document.write('</head><body>');
+          printWindow.document.write(printContent);
+          printWindow.document.write('</body></html>');
+          printWindow.document.close(); // Close the document
+          printWindow.print(); // Trigger the print dialog
+        }
+      </script>
+  
+      <!-- Delete Student Button -->
+      <button onclick="deleteStudent()" class="bg-red-500 text-white px-4 py-2">Delete Student</button>
+  
+      <script>
+        function deleteStudent() {
+          const admissionNo = prompt("Enter Admission No. of student to delete:");
+          
+          if (!admissionNo) return; // Exit if input is empty
+  
+          // Get existing students from localStorage
+          let students = JSON.parse(localStorage.getItem("students")) || [];
+          const initialLength = students.length;
+  
+          // Filter out the student to delete
+          students = students.filter(student => student.admissionNo !== admissionNo);
+  
+          // Save updated students array back to localStorage
+          localStorage.setItem("students", JSON.stringify(students));
+  
+          if (students.length < initialLength) {
+            alert("Student deleted successfully!");
+            loadDashboardData(); // Refresh the dashboard data
+          } else {
+            alert("Student not found. Check Admission No.");
+          }
+        }
+      </script>
+  
+      <!-- Update Student Button -->
+      <button id="update-student-btn" class="bg-gray-500 text-white px-4 py-2">Update Student</button>
+  
+      <!-- Update Student Form -->
+      <div id="update-student-form" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+          <h2 class="text-2xl font-bold mb-4 text-center">Update Student</h2>
+          <form id="update-student">
+            <!-- Admission Number (Visible & Uneditable) -->
+            <div class="mb-4">
+              <label class="block font-medium">Admission Number</label>
+              <input type="text" id="update-admission-no" class="w-full p-2 border rounded font-mono bg-gray-200" readonly />
+            </div>
+  
+            <!-- Class -->
+            <div class="mb-4"z>
+              <label class="block font-medium">Class</label>
+              <select id="update-class" class="w-full p-2 border rounded" onchange="populateUpdateStreamOptions()">
+                <option value="Form 2">Form 2</option>
+                <option value="Form 3">Form 3</option>
+                <option value="Form 4">Form 4</option>
+              </select>
+            </div>
+  
+            <!-- Stream -->
+            <div class="mb-4">
+              <label class="block font-medium">Stream</label>
+              <select id="update-stream" class="border w-full p-2 mb-2">
+                <option value="">Select Stream</option>
+                <!-- Options will be populated by JavaScript -->
+              </select>
+            </div>
+  
+            <!-- Status -->
+            <div class="mb-4">
+              <label class="block font-medium">Status</label>
+              <select id="update-status" class="w-full p-2 border rounded">
+                <option value="Normal">Normal</option>
+                <option value="Suspended">Suspended</option>
+                <option value="Sick">Sick</option>
+              </select>
+            </div>
+  
+            <!-- Religious Society -->
+            <div class="mb-4">
+              <label class="block font-medium">Religious Society</label>
+              <select id="update-religious" class="w-full p-2 border rounded">
+                <option value="CU">CU</option>
+                <option value="Muslim">Muslim</option>
+                <option value="SDA">SDA</option>
+                <option value="YCS">YCS</option>
+              </select>
+            </div>
+  
+            <!-- Leadership -->
+            <div class="mb-4">
+              <label class="block font-medium">Leadership</label>
+              <select id="update-leadership" class="w-full p-2 border rounded">
+                <option value="None">None</option>
+                <option value="Captain">Captain</option>
+                <option value="Sportsman">Sportsman</option>
+              </select>
+            </div>
+  
+            <!-- Buttons -->
+            <div class="flex justify-between mt-4">
+              <button type="button" onclick="updateStudent()" class="bg-blue-600 text-white px-4 py-2 rounded">Update</button>
+              <button type="button" onclick="closeUpdateForm()" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+  
+      <script>
+        // Show Update Student Form
+        function openUpdateForm(admissionNo) {
+          // Get existing students from localStorage
+          const students = JSON.parse(localStorage.getItem("students")) || [];
+          
+          // Find the student by admission number
+          const student = students.find(s => s.admissionNo === admissionNo);
+          
+          if (student) {
+            // Populate the form fields with the student's current data
+            document.getElementById("update-admission-no").value = student.admissionNo; // Set Admission No.
+            document.getElementById("update-class").value = student.class.split(" ")[0]; // Set class
+            populateUpdateStreamOptions(); // Populate streams for the update form
+            document.getElementById("update-stream").value = student.class.split(" ")[1]; // Set stream
+            document.getElementById("update-status").value = student.status; // Set status
+            document.getElementById("update-religious").value = student.religious; // Set religious society
+            document.getElementById("update-leadership").value = student.leadership; // Set leadership
+
+            // Show the update form
+            document.getElementById("update-student-form").classList.remove("hidden");
+          } else {
+            alert("Student not found.");
+          }
+        }
+  
+        // Hide Update Student Form
+        function closeUpdateForm() {
+          document.getElementById("update-student-form").classList.add("hidden");
+        }
+
+        function populateUpdateStreamOptions() {
+          const updateClass = document.getElementById("update-class").value;
+          const updateStreamSelect = document.getElementById("update-stream");
+          updateStreamSelect.innerHTML = '<option value="">Select Stream</option>'; // Clear previous options
+
+          // Define streams for each class
+          const streamsByClass = {
+            "Form 2": streams,
+            "Form 3": streams,
+            "Form 4": streams
+          };
+
+          // Populate the stream dropdown based on the selected class
+          if (updateClass && streamsByClass[updateClass]) {
+            streamsByClass[updateClass].forEach(stream => {
+              const option = document.createElement("option");
+              option.value = stream;
+              option.textContent = stream;
+              updateStreamSelect.appendChild(option);
+            });
+          }
+        }
+  
+        // Attach Event Listener to "Update Student" Button
+        document.getElementById("update-student-btn").addEventListener("click", function() {
+          const admissionNo = prompt("Enter Admission Number to Update:");
+          if (admissionNo) openUpdateForm(admissionNo);
+        });
+  
+        // Update Student Function
+        function updateStudent() {
+          let admissionNo = document.getElementById("update-admission-no").value;
+          let studentClass = document.getElementById("update-class").value; // Get selected class
+          let studentStream = document.getElementById("update-stream").value; // Get selected stream
+          let status = document.getElementById("update-status").value;
+          let religious = document.getElementById("update-religious").value;
+          let leadership = document.getElementById("update-leadership").value;
+
+          // Combine class and stream
+          const combinedClass = `${studentClass} ${studentStream}`;
+
+          // Get existing students from localStorage
+          const students = JSON.parse(localStorage.getItem("students")) || [];
+
+          // Find student in the array and update the values
+          const studentIndex = students.findIndex(s => s.admissionNo === admissionNo);
+          if (studentIndex !== -1) {
+            students[studentIndex].class = combinedClass; // Update to combined class
+            students[studentIndex].status = status;
+            students[studentIndex].religious = religious;
+            students[studentIndex].leadership = leadership;
+            students[studentIndex].lastUpdated = new Date().toISOString().split('T')[0]; // Update last updated date
+          }
+
+          // Save updated students array back to localStorage
+          localStorage.setItem("students", JSON.stringify(students));
+
+          // Update the table and close the update form
+          loadDashboardData();
+          closeUpdateForm();
+        }
+      </script>
+    </div>
+    <table class="w-full">
+      <thead>
+          <tr>
+              <th>Admission No.</th>
+              <th>Name</th>
+              <th>Class</th>
+              <th>Status</th>
+              <th>Religious Status</th>
+              <th>Leadership</th>
+              <th>Last Updated</th>
+          </tr>
+      </thead>
+      <tbody id="student-table">     
+     
+      </div>   
+
+
+      <script>
+        function validateLogin(event) {
+            event.preventDefault();
+            const username = document.getElementById("username").value;
+            const password = document.getElementById("password").value;
+        
+            console.log("Username:", username); // Log the username
+            console.log("Password:", password); // Log the password
+        
+            // Simple hardcoded login check
+            if (username === "MHSDININGHALL" && password === "Mangu@1925") {
+                sessionStorage.setItem("loggedIn", "true");
+                showDashboard();
+            } else {
+                alert("Invalid username or password. Try again.");
+            }
+        }
+        
+        // Show the dashboard
+        function showDashboard() {
+            document.getElementById("login-form").style.display = "none";
+            document.getElementById("dashboard").style.display = "block";
+            document.body.classList.remove("login-bg");
+            loadDashboardData();
+        }
+        
+        // Logout function
+        function logout() {
+            sessionStorage.removeItem("loggedIn");
+            document.getElementById("dashboard").style.display = "none";
+            document.getElementById("login-form").style.display = "flex";
+            document.body.classList.add("login-bg");
+        }
+        
+        // Search for students in the table
+        function searchStudent() {
+            const searchQuery = document.getElementById("search-bar").value.toLowerCase();
+            const tableRows = document.querySelectorAll("#student-table tr");
+        
+            tableRows.forEach(row => {
+                const studentName = row.cells[1].innerText.toLowerCase();
+                const admissionNo = row.cells[0].innerText.toLowerCase();
+                const status = row.cells[3].innerText.toLowerCase();
+                const religiousStatus = row.cells[4].innerText.toLowerCase();
+                
+                // Check if search query matches any of the fields
+                if (studentName.includes(searchQuery) || admissionNo.includes(searchQuery) ||
+                    status.includes(searchQuery) || religiousStatus.includes(searchQuery)) {
+                    row.style.display = ""; // Show the row
+                } else {
+                    row.style.display = "none"; // Hide the row
+                }
+            });
+        }
+        
+        // Load student data into the dashboard
+        function loadDashboardData() {
+            const students = JSON.parse(localStorage.getItem("students")) || [];
+            
+            // Sort students by admission number in ascending order
+            students.sort((a, b) => a.admissionNo.localeCompare(b.admissionNo, { numeric: true }));
+        
+            // Populate the student table
+            document.getElementById("student-table").innerHTML = students.map(s => `
+                <tr>
+                    <td>${s.admissionNo}</td>
+                    <td>${s.name}</td>
+                    <td>${s.class}</td>
+                    <td>${s.status}</td>
+                    <td>${s.religious}</td>
+                    <td>${s.leadership}</td>
+                    <td>${s.lastUpdated}</td>
+                </tr>
+            `).join("");
+        
+            // Update stats
+            updateStats(students);
+        }
+        
+        function updateStats(students) {
+            const totalStudents = students.length; // Total number of students
+            const sentHomeCount = students.filter(student => 
+                student.status === 'Suspended' || 
+                student.status === 'Sick'
+            ).length; // Count of students sent home or sick
+        
+            // Update the stats in the dashboard
+            document.getElementById('total-students').innerText = totalStudents; // Show total students
+            document.getElementById('sent-home').innerText = sentHomeCount; // Show students sent home or sick
+        }
+        
+        // Initialize dashboard on page load
+        window.onload = function () {
+            if (sessionStorage.getItem("loggedIn")) {
+                showDashboard(); // Show the dashboard if logged in
+            } else {
+                document.getElementById("login-form").style.display = "flex"; // Show the login form if not logged in
+                document.getElementById("dashboard").style.display = "none"; // Ensure the dashboard is hidden
+            }
+        
+            // Populate local storage with demo students if it's empty ```javascript
+            if (!localStorage.getItem("students")) {
+                const initialStudents = [
+                    {
+                        "admissionNo": "12345",
+                        "name": "John Doe",
+                        "class": "2 Cornell",
+                        "status": "Sick",
+                        "religious": "None",
+                        "leadership": "Sportsman",
+                        "lastUpdated": "2023-10-01"
+                    },
+                    {
+                        "admissionNo": "12346",
+                        "name": "Jane Smith",
+                        "class": "2 Cornell",
+                        "status": "Normal",
+                        "religious": "Muslim",
+                        "leadership": "Captain",
+                        "lastUpdated": "2023-10-02"
+                    }
+                ];
+                localStorage.setItem("students", JSON.stringify(initialStudents));
+            }
+        };
+        </script>
+        <script>
+        // Save students to localStorage whenever updated
+        function saveStudents(students) {
+            localStorage.setItem('students', JSON.stringify(students));
+        }
+        
+        // Example usage when adding a student
+        function addStudent(newStudent) {
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            students.push(newStudent);
+            saveStudents(students);
+        }
+        </script>
+        </body>
+        </html>
