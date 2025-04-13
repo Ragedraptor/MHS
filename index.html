@@ -3,287 +3,288 @@
 <head>
   <meta charset="utf-8"/>
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dining Hall Dashboard</title>
+  <meta name="description" content="Welcome to the MHS website, your go-to resource for information and updates.">
+  <meta name="keywords" content="MHS website, MHS, education, resources, dining hall, dashboard">
+  <title>Dining Hall Dashboard - MHS Website</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+</head>
   <style>
-    /* Background image only for login page */
-    .login-bg {
-      background: url('blue-night_DBUU6N5YUY.jpg') no-repeat center center fixed;
-      background-size: cover;
-    }
-    body {
-      font-family: 'Roboto', sans-serif;
-      background-color: #f4f4f4;
-    }
+  /* Background image only for login page */
 
+  .login-bg {
+    background: url('blue-night_DBUU6N5YUY.jpg') no-repeat center center fixed;
+    background-size: cover;
+  } // Ensure this closing brace matches an opening brace in the code structure
+  
+  body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f4;
+  }
+  
+  #login-form {
+    height: 100vh; /* Full height for the login form */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto; /* Allow overflow but make sure content is scrollable if needed */
+  }
+  
+  .dashboard {
+  display: none; /* Ensure dashboard is hidden by default */
+  padding: 20px;
+  background-color: #e0e0e0; /* Soft gray background for the dashboard */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #0077b6; /* Vibrant blue for table header */
+    color: white;
+  }
+  
+  .header {
+    background-color: #1b263b; /* Dark navy blue for header */
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px 8px 0 0; /* Rounded top corners */
+  }
+  
+  .header h1 {
+    text-align: center;
+    flex-grow: 1; /* Center the title */
+    font-size: 1.5rem; /* Increase font size */
+  }
+  
+  .header .icon-button {
+    background: none; /* No background */
+    border: none; /* No border */
+    color: white; /* White text color */
+    cursor: pointer; /* Pointer cursor */
+    font-size: 1.5rem; /* Increase icon size */
+    margin-left: 10px; /* Space between icons */
+    transition: color 0.3s; /* Smooth transition for color change */
+  }
+  
+  .header .icon-button:hover {
+    color: #0077b6; /* Change color on hover */
+  }
+  
+  .header button {
+    background-color: #e74c3c; /* Red color for logout button */
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s; /* Smooth transition */
+  }
+  
+  .header button:hover {
+    background-color: #c0392b; /* Darker red on hover */
+  }
+  
+  .stats {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    justify-content: space-around;
+    margin: 20px 0;
+  }
+  
+  .stat-box {
+    background: #f8f9fa; /* Light gray background for stat boxes */
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    margin-bottom: 20px; /* Space between boxes */
+    border: 1px solid #0077b6; /* Border color matching the theme */
+    transition: transform 0.2s; /* Add transition for hover effect */
+  }
+  
+  .stat-box:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+  }
+  
+  .actions {
+    margin: 20px 0;
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    justify-content: center; /* Center the actions */
+  }
+  
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: none;
+  }
+  
+  /* Style for the login box */
+  .login-box {
+    background-color: #000; /* Black background for the login box */
+    color: white; /* White text color */
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Input field styles */
+  input {
+    color: white; /* Text color for input fields */
+    background-color: #333; /* Dark background for input fields */
+  }
+  
+  input::placeholder {
+    color: #bbb; /* Light gray placeholder text */
+  }
+  
+  /* Search bar styles */
+  #search-bar {
+    color: white; /* White text color for search bar */
+    background-color: #333; /* Dark background for search bar */
+    width: 300px; /* Set a fixed width for the search bar */
+  }
+  
+  /* Button hover effects */
+  button {
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+  }
+  
+  button:hover {
+    transform: scale(1.05); /* Slightly enlarge button on hover */
+  }
+  
+  /* Table row hover effect */
+  tr:hover {
+    background-color: #f1f1f1; /* Light gray background on row hover */
+  }
+  
+  /* ================= RESPONSIVE FIXES ONLY ================= */
+  @media (max-width: 768px) {
+    /* Header adjustments */
+    .header {
+      flex-wrap: wrap;
+      gap: 15px;
+      padding: 15px 10px;
+    }
+  
+    .header h1 {
+      width: 100%;
+      order: -1;
+      margin-bottom: 0;
+    }
+  
+    /* Stats grid */
+    .stats {
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+  
+    .stat-box {
+      width: 100%;
+      margin: 0;
+    }
+  
+    /* Search bar */
+    #search-bar {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    /* Table scrolling */
+    table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+  
     #login-form {
-      height: 100vh; /* Full height for the login form */
+      height: auto; /* Let the login form adjust based on content */
+    }
+  }
+  
+  /* ================= UNIVERSAL MOBILE FIXES ================= */
+  @media (max-width: 640px) { /* Covers all phones */
+    .header {
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 12px;
+    }
+  
+    .header h1 {
+      width: 100%;
+      order: 1;
+      font-size: 1.3rem;
+      margin: 0 0 8px 0;
+    }
+  
+    /* Icon container */
+    .header-icons {
       display: flex;
       justify-content: center;
-      align-items: center;
-      overflow: hidden; /* Prevent overflow */
+      gap: 8px;
+      order: 2;
+      flex: 1 1 100%;
     }
-
-    .dashboard {
-      display: none; /* Ensure dashboard is hidden by default */
-      padding: 20px;
-      background-color: #e0e0e0; /* Soft gray background for the dashboard */
-      border-radius: 8px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-    }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-    }
-
-    th, td {
-      border: 1px solid #ddd;
-      padding: 12px;
-      text-align: left;
-    }
-
-    th {
-      background-color: #0077b6; /* Vibrant blue for table header */
-      color: white;
-    }
-
-    .header {
-      background-color: #1b263b; /* Dark navy blue for header */
-      color: white;
-      padding: 15px;
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      border-radius: 8px 8px 0 0; /* Rounded top corners */
-    }
-
-    .header h1 {
-      text-align: center;
-      flex-grow: 1; /* Center the title */
-      font-size: 1.5rem; /* Increase font size */
-    }
-
+  
     .header .icon-button {
-      background: none; /* No background */
-      border: none; /* No border */
-      color: white; /* White text color */
-      cursor: pointer; /* Pointer cursor */
-      font-size: 1.5rem; /* Increase icon size */
-      margin-left: 10px; /* Space between icons */
-      transition: color 0.3s; /* Smooth transition for color change */
+      margin: 0;
+      font-size: 1.3rem;
+      padding: 6px;
+      flex: 0 0 auto;
     }
-
-    .header .icon-button:hover {
-      color: #0077b6; /* Change color on hover */
+  
+    /* Logout button */
+    .header > button:not(.icon-button) {
+      order: 3;
+      width: 100%;
+      margin-top: 8px;
+      padding: 10px;
+      font-size: 0.95rem;
     }
-
-    .header button {
-      background-color: #e74c3c; /* Red color for logout button */
-      border: none;
-      color: white;
-      padding: 10px 15px;
-      cursor: pointer;
-      border-radius: 5px;
-      transition: background-color 0.3s; /* Smooth transition */
+  }
+  
+  @media (max-width: 375px) { /* Extra small phones */
+    .header .icon-button {
+      font-size: 1.1rem;
+      padding: 4px;
     }
-
-    .header button:hover {
-      background-color: #c0392b; /* Darker red on hover */
+  
+    .header h1 {
+      font-size: 1.1rem;
     }
-
-    .stats {
-      display: flex;
-      flex-wrap: wrap; /* Allow wrapping on smaller screens */
-      justify-content: space-around;
-      margin: 20px 0;
-    }
-
-    .stat-box {
-      background: #f8f9fa; /* Light gray background for stat boxes */
-      padding: 20px;
-      text-align: center;
-      border-radius: 8px;
-      box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-      width: 30%;
-      margin-bottom: 20px; /* Space between boxes */
-      border: 1px solid #0077b6; /* Border color matching the theme */
-      transition: transform 0.2s; /* Add transition for hover effect */
-    }
-
-    .stat-box:hover {
-      transform: scale(1.05); /* Slightly enlarge on hover */
-    }
-
-    .actions {
-      margin: 20px 0;
-      display: flex;
-      flex-wrap: wrap; /* Allow wrapping on smaller screens */
-      justify-content: center; /* Center the actions */
-    }
-
-    .notification {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      z-index: 1000;
-      display: none;
-    }
-
-    /* Style for the login box */
-    .login-box {
-      background-color: #000; /* Black background for the login box */
-      color: white; /* White text color */
-      border-radius: 8px;
-      padding: 20px;
-      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
-    }
-
-    /* Input field styles */
-    input {
-      color: white; /* Text color for input fields */
-      background-color: #333; /* Dark background for input fields */
-    }
-
-    input::placeholder {
-      color: #bbb; /* Light gray placeholder text */
-    }
-
-    /* Search bar styles */
-    #search-bar {
-      color: white; /* White text color for search bar */
-      background-color: #333; /* Dark background for search bar */
-      width: 300px; /* Set a fixed width for the search bar */
-    }
-
-    /* Button hover effects */
-    button {
-      transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
-    }
-
-    button:hover {
-      transform: scale(1.05); /* Slightly enlarge button on hover */
-    }
-
-    /* Table row hover effect */
-    tr:hover {
-      background-color: #f1f1f1; /* Light gray background on row hover */
-    }
-
-    /* ================= RESPONSIVE FIXES ONLY ================= */
-    @media (max-width: 768px) {
-      /* Header adjustments */
-      .header {
-        flex-wrap: wrap;
-        gap: 15px;
-        padding: 15px 10px;
-      }
-
-      .header h1 {
-        width: 100%;
-        order: -1;
-        margin-bottom: 0;
-      }
-
-      /* Stats grid */
-      .stats {
-        flex-wrap: wrap;
-        gap: 15px;
-      }
-
-      .stat-box {
-        width: 100%;
-        margin: 0;
-      }
-
-      /* Search bar */
-      #search-bar {
-        width: 100%;
-        max-width: 100%;
-      }
-    }
-
-    @media (max-width: 480px) {
-      /* Table scrolling */
-      table {
-        display: block;
-        overflow-x: auto;
-        white-space: nowrap;
-      }
-
-      /* Icon spacing */
-      .header .icon-button {
-        margin: 0 5px;
-      }
-
-      /* Dashboard padding */
-      .dashboard {
-        padding: 15px;
-      }
-    }
-
-    /* ================= UNIVERSAL MOBILE FIXES ================= */
-    @media (max-width: 640px) { /* Covers all phones */
-      .header {
-        flex-wrap: wrap;
-        gap: 12px;
-        padding: 12px;
-      }
-
-      .header h1 {
-        width: 100%;
-        order: 1;
-        font-size: 1.3rem;
-        margin: 0 0 8px 0;
-      }
-
-      /* Icon container */
-      .header-icons {
-        display: flex;
-        justify-content: center;
-        gap: 8px;
-        order: 2;
-        flex: 1 1 100%;
-      }
-
-      .header .icon-button {
-        margin: 0;
-        font-size: 1.3rem;
-        padding: 6px;
-        flex: 0 0 auto;
-      }
-
-      /* Logout button */
-      .header > button:not(.icon-button) {
-        order: 3;
-        width: 100%;
-        margin-top: 8px;
-        padding: 10px;
-        font-size: 0.95rem;
-      }
-    }
-
-    @media (max-width: 375px) { /* Extra small phones */
-      .header .icon-button {
-        font-size: 1.1rem;
-        padding: 4px;
-      }
-      
-      .header h1 {
-        font-size: 1.1rem;
-      }
-    }
-  </style>
+  }
+</style>  
 </head>
 <body class="login-bg">
   <!-- Login Form -->
   <div id="login-form" class="h-screen flex items-center justify-center">
     <div class="login-box max-w-md w-full">
-      <img class="mx-auto h-32 w-32 mb-4" src="mangu_logo.jpg" alt="Mang'u High School Logo" /> <!-- Logo added here -->
+      <img class="mx-auto h-32 w-32 mb-4" src="mangu_logo.jpg" alt="Mang'u High School Logo" />
       <h2 class="text-3xl font-bold mb-6 text-center">Login</h2>
-      <form onsubmit="return validateLogin(event)">        <div class="mb-4">
+      <form onsubmit="return validateLogin(event)">
+        <div class="mb-4">
           <label class="block text-lg" for="username">Username</label>
           <input class="w-full px-4 py-3 border rounded-lg" id="username" required type="text" placeholder="Enter your username"/>
         </div>
@@ -296,8 +297,8 @@
     </div>
   </div>
 
-   <!-- Dashboard -->
-   <div id="dashboard" class="dashboard">
+  <!-- Dashboard (initially hidden) -->
+  <div id="dashboard" class="dashboard hidden">
     <!-- Header -->
     <div class="header">
       <img class="h-16 w-16" src="mangu_logo.jpg" alt="Mang'u High School Logo" />
@@ -320,25 +321,39 @@
         </button>
       </div>
     </div>
+  </div>
+</body>
 
    
 
-  <script>
-
-
-    // Call the function when the dashboard is loaded
-    window.onload = function() {
-      setLastUpdated();
-      document.getElementById('dashboard').style.display = 'block'; // Show the dashboard
-      document.getElementById('login-form').style.display = 'none'; // Hide the login form
-    };
-
-    // Function to handle Dining Hall button click
-    function openDiningHall() {
-      // Redirect to the dining hall page
-      window.location.href = 'dining_hall.html'; // Change this to your actual dining hall page URL
-    }
-  </script>
+    <script>
+      // Function to update the "Last updated" timestamp
+      function setLastUpdated() {
+        const now = new Date();
+        const lastUpdatedElement = document.getElementById('last-updated');
+        if (lastUpdatedElement) {
+          lastUpdatedElement.textContent = `Last updated: ${now.toLocaleString()}`;
+        }
+      }
+    
+      // Function to handle Dining Hall button click
+      function openDiningHall() {
+        // Redirect to the dining hall page
+        window.location.href = 'dining_hall.html'; // Change this to your actual dining hall page URL
+      }
+    
+      // Call the function when the dashboard is loaded
+      window.onload = function() {
+        setLastUpdated();
+    
+        const dashboard = document.getElementById('dashboard');
+        const loginForm = document.getElementById('login-form');
+    
+        if (dashboard) dashboard.style.display = 'block'; // Show the dashboard
+        if (loginForm) loginForm.style.display = 'none'; // Hide the login form
+      };
+    </script>
+    
     </div>
   </div>
     <!-- Quick Stats -->
@@ -934,69 +949,70 @@
           <h2 class="text-2xl font-bold mb-4 text-center">Update Student</h2>
           <form id="update-student">
             <!-- Admission Number (Visible & Uneditable) -->
-            <div class="mb-4">
-              <label class="block font-medium">Admission Number</label>
-              <input type="text" id="update-admission-no" class="w-full p-2 border rounded font-mono bg-gray-200" readonly />
-            </div>
-  
-            <!-- Class -->
-            <div class="mb-4"z>
-              <label class="block font-medium">Class</label>
-              <select id="update-class" class="w-full p-2 border rounded" onchange="populateUpdateStreamOptions()">
-                <option value="Form 2">Form 2</option>
-                <option value="Form 3">Form 3</option>
-                <option value="Form 4">Form 4</option>
-              </select>
-            </div>
-  
-            <!-- Stream -->
-            <div class="mb-4">
-              <label class="block font-medium">Stream</label>
-              <select id="update-stream" class="border w-full p-2 mb-2">
-                <option value="">Select Stream</option>
-                <!-- Options will be populated by JavaScript -->
-              </select>
-            </div>
-  
-            <!-- Status -->
-            <div class="mb-4">
-              <label class="block font-medium">Status</label>
-              <select id="update-status" class="w-full p-2 border rounded">
-                <option value="Normal">Normal</option>
-                <option value="Suspended">Suspended</option>
-                <option value="Sick">Sick</option>
-              </select>
-            </div>
-  
-            <!-- Religious Society -->
-            <div class="mb-4">
-              <label class="block font-medium">Religious Society</label>
-              <select id="update-religious" class="w-full p-2 border rounded">
-                <option value="CU">CU</option>
-                <option value="Muslim">Muslim</option>
-                <option value="SDA">SDA</option>
-                <option value="YCS">YCS</option>
-              </select>
-            </div>
-  
-            <!-- Leadership -->
-            <div class="mb-4">
-              <label class="block font-medium">Leadership</label>
-              <select id="update-leadership" class="w-full p-2 border rounded">
-                <option value="None">None</option>
-                <option value="Captain">Captain</option>
-                <option value="Sportsman">Sportsman</option>
-              </select>
-            </div>
-  
-            <!-- Buttons -->
-            <div class="flex justify-between mt-4">
-              <button type="button" onclick="updateStudent()" class="bg-blue-600 text-white px-4 py-2 rounded">Update</button>
-              <button type="button" onclick="closeUpdateForm()" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
-            </div>
+            <form id="update-form">
+              <div class="mb-4">
+                <label class="block font-medium" for="update-admission-no">Admission Number</label>
+                <input type="text" id="update-admission-no" class="w-full p-2 border rounded font-mono bg-gray-200" readonly />
+              </div>
+            
+              <!-- Class -->
+              <div class="mb-4">
+                <label class="block font-medium" for="update-class">Class</label>
+                <select id="update-class" class="w-full p-2 border rounded" onchange="populateUpdateStreamOptions()">
+                  <option value="Form 2">Form 2</option>
+                  <option value="Form 3">Form 3</option>
+                  <option value="Form 4">Form 4</option>
+                </select>
+              </div>
+            
+              <!-- Stream -->
+              <div class="mb-4">
+                <label class="block font-medium" for="update-stream">Stream</label>
+                <select id="update-stream" class="border w-full p-2 mb-2">
+                  <option value="">Select Stream</option>
+                  <!-- Options will be populated by JavaScript -->
+                </select>
+              </div>
+            
+              <!-- Status -->
+              <div class="mb-4">
+                <label class="block font-medium" for="update-status">Status</label>
+                <select id="update-status" class="w-full p-2 border rounded">
+                  <option value="Normal">Normal</option>
+                  <option value="Suspended">Suspended</option>
+                  <option value="Sick">Sick</option>
+                </select>
+              </div>
+            
+              <!-- Religious Society -->
+              <div class="mb-4">
+                <label class="block font-medium" for="update-religious">Religious Society</label>
+                <select id="update-religious" class="w-full p-2 border rounded">
+                  <option value="CU">CU</option>
+                  <option value="Muslim">Muslim</option>
+                  <option value="SDA">SDA</option>
+                  <option value="YCS">YCS</option>
+                </select>
+              </div>
+            
+              <!-- Leadership -->
+              <div class="mb-4">
+                <label class="block font-medium" for="update-leadership">Leadership</label>
+                <select id="update-leadership" class="w-full p-2 border rounded">
+                  <option value="None">None</option>
+                  <option value="Captain">Captain</option>
+                  <option value="Sportsman">Sportsman</option>
+                </select>
+              </div>
+            
+              <!-- Buttons -->
+              <div class="flex justify-between mt-4">
+                <button type="button" onclick="updateStudent()" class="bg-blue-600 text-white px-4 py-2 rounded">Update</button>
+                <button type="button" onclick="closeUpdateForm()" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
+              </div>
+            </form>                                                                                                                                                                                                                                                                                                                                                                                   
           </form>
         </div>
-      </div>
   
       <script>
         // Show Update Student Form
@@ -1110,67 +1126,61 @@
 
 
       <script>
-        function validateLogin(event) {
-            event.preventDefault();
-            const username = document.getElementById("username").value;
-            const password = document.getElementById("password").value;
-        
-            console.log("Username:", username); // Log the username
-            console.log("Password:", password); // Log the password
-        
-            // Simple hardcoded login check
-            if (username === "MHSDININGHALL" && password === "Mangu@1925") {
-                sessionStorage.setItem("loggedIn", "true");
-                showDashboard();
-            } else {
-                alert("Invalid username or password. Try again.");
-            }
-        }
-        
-        // Show the dashboard
-        function showDashboard() {
-            document.getElementById("login-form").style.display = "none";
-            document.getElementById("dashboard").style.display = "block";
-            document.body.classList.remove("login-bg");
-            loadDashboardData();
-        }
-        
-        // Logout function
-        function logout() {
-            sessionStorage.removeItem("loggedIn");
-            document.getElementById("dashboard").style.display = "none";
-            document.getElementById("login-form").style.display = "flex";
-            document.body.classList.add("login-bg");
-        }
-        
+function validateLogin(event) {
+    event.preventDefault(); // Prevent default form submission
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    if (username === "MHSDININGHALL" && password === "Mangu@1925") {
+        sessionStorage.setItem("loggedIn", "true");
+        showDashboard(); // Show dashboard on successful login
+    } else {
+        alert("Invalid username or password. Try again.");
+    }
+}
+
+function showDashboard() {
+    document.getElementById("login-form").style.display = "none"; // Hide the login form
+    document.getElementById("dashboard").style.display = "block"; // Show the dashboard
+    document.body.classList.remove("login-bg"); // Remove background change if needed
+    loadDashboardData(); // Populate dashboard data
+}
+
+function logout() {
+    sessionStorage.removeItem("loggedIn");
+    document.getElementById("dashboard").style.display = "none"; // Hide dashboard
+    document.getElementById("login-form").style.display = "flex"; // Show login form
+    document.body.classList.add("login-bg");
+}
+
+    
         // Search for students in the table
         function searchStudent() {
             const searchQuery = document.getElementById("search-bar").value.toLowerCase();
             const tableRows = document.querySelectorAll("#student-table tr");
-        
+    
             tableRows.forEach(row => {
                 const studentName = row.cells[1].innerText.toLowerCase();
                 const admissionNo = row.cells[0].innerText.toLowerCase();
                 const status = row.cells[3].innerText.toLowerCase();
                 const religiousStatus = row.cells[4].innerText.toLowerCase();
-                
-                // Check if search query matches any of the fields
+    
                 if (studentName.includes(searchQuery) || admissionNo.includes(searchQuery) ||
                     status.includes(searchQuery) || religiousStatus.includes(searchQuery)) {
-                    row.style.display = ""; // Show the row
+                    row.style.display = "";
                 } else {
-                    row.style.display = "none"; // Hide the row
+                    row.style.display = "none";
                 }
             });
         }
-        
+    
         // Load student data into the dashboard
         function loadDashboardData() {
             const students = JSON.parse(localStorage.getItem("students")) || [];
-            
+    
             // Sort students by admission number in ascending order
             students.sort((a, b) => a.admissionNo.localeCompare(b.admissionNo, { numeric: true }));
-        
+    
             // Populate the student table
             document.getElementById("student-table").innerHTML = students.map(s => `
                 <tr>
@@ -1183,70 +1193,74 @@
                     <td>${s.lastUpdated}</td>
                 </tr>
             `).join("");
-        
+    
             // Update stats
             updateStats(students);
         }
-        
+    
+        // Update statistics on the dashboard
         function updateStats(students) {
-            const totalStudents = students.length; // Total number of students
-            const sentHomeCount = students.filter(student => 
-                student.status === 'Suspended' || 
-                student.status === 'Sick'
-            ).length; // Count of students sent home or sick
-        
-            // Update the stats in the dashboard
-            document.getElementById('total-students').innerText = totalStudents; // Show total students
-            document.getElementById('sent-home').innerText = sentHomeCount; // Show students sent home or sick
+            const totalStudents = students.length;
+            const sentHomeCount = students.filter(student =>
+                student.status === 'Suspended' || student.status === 'Sick'
+            ).length;
+    
+            // Display total students and sent home count
+            document.getElementById('total-students').innerText = totalStudents;
+            document.getElementById('sent-home').innerText = sentHomeCount;
         }
-        
-        // Initialize dashboard on page load
-        window.onload = function () {
-            if (sessionStorage.getItem("loggedIn")) {
-                showDashboard(); // Show the dashboard if logged in
-            } else {
-                document.getElementById("login-form").style.display = "flex"; // Show the login form if not logged in
-                document.getElementById("dashboard").style.display = "none"; // Ensure the dashboard is hidden
-            }
-        
-            // Populate local storage with demo students if it's empty ```javascript
-            if (!localStorage.getItem("students")) {
-                const initialStudents = [
-                    {
-                        "admissionNo": "12345",
-                        "name": "John Doe",
-                        "class": "2 Cornell",
-                        "status": "Sick",
-                        "religious": "None",
-                        "leadership": "Sportsman",
-                        "lastUpdated": "2023-10-01"
-                    },
-                    {
-                        "admissionNo": "12346",
-                        "name": "Jane Smith",
-                        "class": "2 Cornell",
-                        "status": "Normal",
-                        "religious": "Muslim",
-                        "leadership": "Captain",
-                        "lastUpdated": "2023-10-02"
-                    }
-                ];
-                localStorage.setItem("students", JSON.stringify(initialStudents));
-            }
-        };
-        </script>
-        <script>
+    
         // Save students to localStorage whenever updated
         function saveStudents(students) {
             localStorage.setItem('students', JSON.stringify(students));
         }
-        
-        // Example usage when adding a student
+    
+        // Example usage: Add a new student to localStorage
         function addStudent(newStudent) {
             const students = JSON.parse(localStorage.getItem('students')) || [];
             students.push(newStudent);
             saveStudents(students);
         }
-        </script>
+    
+        // Initialize dashboard on page load
+        window.onload = function () {
+    const dashboard = document.getElementById("dashboard");
+    const loginForm = document.getElementById("login-form");
+
+    // Check if user is logged in
+    if (sessionStorage.getItem("loggedIn")) {
+        showDashboard();  // Show dashboard if logged in
+    } else {
+        loginForm.style.display = "flex"; // Ensure login form is displayed
+        dashboard.style.display = "none"; // Ensure dashboard is hidden
+    }
+
+    // Set initial students data if none exist
+    if (!localStorage.getItem("students")) {
+        const initialStudents = [
+            {
+                "admissionNo": "12345",
+                "name": "John Doe",
+                "class": "2 Cornell",
+                "status": "Sick",
+                "religious": "None",
+                "leadership": "Sportsman",
+                "lastUpdated": "2023-10-01"
+            },
+            {
+                "admissionNo": "12346",
+                "name": "Jane Smith",
+                "class": "2 Cornell",
+                "status": "Normal",
+                "religious": "Muslim",
+                "leadership": "Captain",
+                "lastUpdated": "2023-10-02"
+            }
+        ];
+        localStorage.setItem("students", JSON.stringify(initialStudents));
+    }
+};
+    </script>
+    
         </body>
         </html>
