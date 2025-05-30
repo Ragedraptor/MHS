@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Leave Request Form</title>
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon_io/favicon-32x32.png" />
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon_io/favicon-16x16.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon_io/apple-touch-icon.png" />
+  <link rel="manifest" href="favicon_io/site.webmanifest" />
+  <meta name="theme-color" content="#ffffff" />
+
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f4f4;
+    }
+
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    h1 {
+      text-align: center;
+      color: #4CAF50;
+    }
+
+    label {
+      display: block;
+      margin-top: 10px;
+      font-size: 16px;
+    }
+
+    input, select, textarea {
+      width: 100%;
+      padding: 10px;
+      margin-top: 5px;
+      margin-bottom: 20px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+    }
+
+    .submit-btn {
+      background-color: #4CAF50;
+      color: white;
+      border: none;
+      padding: 10px 20px;
+      cursor: pointer;
+      border-radius: 5px;
+      font-size: 16px;
+    }
+
+    .submit-btn:hover {
+      background-color: #45a049;
+    }
+
+    .approval-section {
+      margin-top: 30px;
+      display: flex;
+      justify-content: space-between;
+    }
+
+    .approval-section .signature {
+      border-bottom: 1px solid #ccc;
+      width: 200px;
+      margin-top: 5px;
+    }
+
+    .home-button {
+      background-color: #0077b6;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+
+    .home-button:hover {
+      background-color: #005f8c;
+    }
+  </style>
+</head>
+
+<body>
+  <div class="container">
+    <button class="home-button" onclick="window.location.href='index.html'">
+      <i class="fas fa-home"></i> Home
+    </button>
+
+    <h1>Leave Request Form</h1>
+    <form id="leave-request-form">
+      <!-- Student Details -->
+      <label for="admission-no">Admission No:</label>
+      <input type="text" id="admission-no" name="admission-no" required />
+
+      <label for="name">Full Name:</label>
+      <input type="text" id="name" name="name" required readonly />
+
+      <label for="student-class">Class:</label>
+      <select id="student-class" name="class" required>
+        <option value="">-- Select Class --</option>
+        <option value="Form 2">Form 2</option>
+        <option value="Form 3">Form 3</option>
+        <option value="Form 4">Form 4</option>
+      </select>
+
+      <label for="student-stream">Stream:</label>
+      <select id="student-stream" name="stream" required>
+        <option value="">-- Select Stream --</option>
+        <option value="Amherst">Amherst</option>
+        <option value="Berkley">Berkley</option>
+        <option value="Cambridge">Cambridge</option>
+        <option value="Cape">Cape</option>
+        <option value="Chicago">Chicago</option>
+        <option value="Columbia">Columbia</option>
+        <option value="Cornell">Cornell</option>
+        <option value="Dartmouth">Dartmouth</option>
+        <option value="Dayton">Dayton</option>
+        <option value="Duke">Duke</option>
+        <option value="Edinburgh">Edinburgh</option>
+        <option value="Harvard">Harvard</option>
+        <option value="Hopkins">Hopkins</option>
+        <option value="MIT">MIT</option>
+        <option value="Michigan">Michigan</option>
+        <option value="Oxford">Oxford</option>
+        <option value="Princeton">Princeton</option>
+        <option value="Stanford">Stanford</option>
+        <option value="Yale">Yale</option>
+        <option value="Zurich">Zurich</option>
+      </select>
+
+      <!-- Contact -->
+      <label for="contact">Contact Information (Phone/Email):</label>
+      <input type="text" id="contact" name="contact" required />
+
+      <!-- Leave Details -->
+      <label for="leave-type">Type of Leave:</label>
+      <select id="leave-type" name="leave-type" required>
+        <option value="Medical">Medical</option>
+        <option value="Suspension">Suspension</option>
+        <option value="Others">Others</option>
+      </select>
+
+      <label for="start-date">Start Date:</label>
+      <input type="date" id="start-date" name="start-date" required />
+
+      <label for="end-date">End Date:</label>
+      <input type="date" id="end-date" name="end-date" required />
+
+      <label for="reason">Reason for Leave:</label>
+      <textarea id="reason" name="reason" rows="4" required></textarea>
+
+      <!-- Approvals -->
+      <div class="approval-section">
+        <div>
+          <label>Parent/Guardian Approval:</label>
+          <div class="signature"></div>
+        </div>
+        <div>
+          <label>D Principal/Principal Approval:</label>
+          <div class="signature"></div>
+        </div>
+      </div>
+
+      <button type="submit" class="submit-btn">Submit Leave Request</button>
+    </form>
+  </div>
+
+  <script>
+    // Preload students into localStorage (for demo/testing)
+    if (!localStorage.getItem("students")) {
+      const students = [
+        { admissionNo: "1001", name: "John Doe", class: "Form 3", stream: "Harvard" },
+        { admissionNo: "1002", name: "Jane Smith", class: "Form 2", stream: "Cambridge" }
+      ];
+      localStorage.setItem("students", JSON.stringify(students));
+    }
+
+    // Auto-fill fields based on admission number
+    document.getElementById("admission-no").addEventListener("input", function () {
+      const admissionNo = this.value;
+      const students = JSON.parse(localStorage.getItem("students")) || [];
+      const student = students.find(s => s.admissionNo === admissionNo);
+
+      if (student) {
+        document.getElementById("name").value = student.name;
+        document.getElementById("student-class").value = student.class;
+        document.getElementById("student-stream").value = student.stream;
+      } else {
+        document.getElementById("name").value = "";
+        document.getElementById("student-class").value = "";
+        document.getElementById("student-stream").value = "";
+      }
+    });
+
+    // Handle form submission and save leave status in localStorage
+    document.getElementById("leave-request-form").addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      const admissionNo = document.getElementById("admission-no").value;
+      const leaveType = document.getElementById("leave-type").value;
+
+      let statusMessage = "No leave requested yet";
+      if (leaveType === "Medical") {
+        statusMessage = "Sick Leave";
+      } else if (leaveType === "Suspension") {
+        statusMessage = "Suspended";
+      } else if (leaveType === "Others") {
+        statusMessage = "On Leave";
+      } else if (leaveType === "None") {
+        statusMessage = "No leave requested";
+      }
+
+      // Save leave status keyed by admission number
+      let leaveStatuses = JSON.parse(localStorage.getItem("leaveStatuses")) || {};
+      leaveStatuses[admissionNo] = statusMessage;
+      localStorage.setItem("leaveStatuses", JSON.stringify(leaveStatuses));
+
+      alert("Leave request submitted!");
+
+      // Optionally clear the form or redirect
+      this.reset();
+      document.getElementById("name").value = "";
+      document.getElementById("student-class").value = "";
+      document.getElementById("student-stream").value = "";
+    });
+  </script>
+</body>
+</html>
+
+        

@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Submitted Leave Reports</title>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f4f4;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: white;
+      border-radius: 8px;
+      padding: 20px;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    h1 {
+      text-align: center;
+      color: #4CAF50;
+      margin-bottom: 20px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-bottom: 20px;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 10px;
+      text-align: left;
+    }
+    th {
+      background-color: #4CAF50;
+      color: white;
+    }
+    tr:nth-child(even) {
+      background-color: #f9f9f9;
+    }
+    .back-button {
+      display: inline-block;
+      background-color: #0077b6;
+      color: white;
+      padding: 10px 15px;
+      border-radius: 5px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .back-button:hover {
+      background-color: #005f8c;
+    }
+    .no-reports {
+      text-align: center;
+      font-style: italic;
+      color: #777;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Submitted Leave Reports</h1>
+    <table id="reports-table">
+      <thead>
+        <tr>
+          <th>Admission No</th>
+          <th>Name</th>
+          <th>Class</th>
+          <th>Stream</th>
+          <th>Leave Status</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- Filled by JS -->
+      </tbody>
+    </table>
+
+    <p class="no-reports" id="no-reports-msg" style="display:none;">
+      No submitted leave reports found.
+    </p>
+
+    <a href="index.html" class="back-button">← Back to Home</a>
+  </div>
+
+  <script>
+    window.addEventListener('DOMContentLoaded', () => {
+      const students = JSON.parse(localStorage.getItem("students")) || [];
+      const leaveStatuses = JSON.parse(localStorage.getItem("leaveStatuses")) || {};
+      const tbody = document.querySelector("#reports-table tbody");
+      const noReportsMsg = document.getElementById("no-reports-msg");
+
+      tbody.innerHTML = ""; // Clear existing rows
+
+      // Filter students with leave status other than "No leave requested" or "No leave requested yet"
+      const reportedStudents = students.filter(s => {
+        const status = leaveStatuses[s.admissionNo];
+        return status && status !== "No leave requested" && status !== "No leave requested yet";
+      });
+
+      if (reportedStudents.length === 0) {
+        noReportsMsg.style.display = "block";
+        document.getElementById("reports-table").style.display = "none";
+        return;
+      }
+
+      reportedStudents.forEach(student => {
+        const status = leaveStatuses[student.admissionNo] || "No leave requested";
+
+        const tr = document.createElement("tr");
+        tr.innerHTML = `
+          <td>${student.admissionNo}</td>
+          <td>${student.name}</td>
+          <td>${student.class}</td>
+          <td>${student.stream}</td>
+          <td>${status}</td>
+        `;
+        tbody.appendChild(tr);
+      });
+    });
+  </script>
+</body>
+</html>

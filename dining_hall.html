@@ -1,19 +1,31 @@
-
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+      <!-- Favicon and App Icons -->
+<link rel="icon" type="image/png" sizes="32x32" href="favicon_io\favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon_io\favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon_io\apple-touch-icon.png">
+<link rel="android-chrome-512x512" type="image/png" sizes="32x32" href="favicon_io\android-chrome-512x512.png">
+<link rel="android-chrome-192x192 sizes="180x180" href="favicon_io\android-chrome-192x192.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="theme-color" content="#ffffff">
     <title>Dining Hall Seating Arrangement</title>
 </head>
+
 <body class="bg-gray-100">
     <div class="container mx-auto p-4">
         <header class="bg-blue-600 text-white p-4 rounded-lg shadow-md flex items-center justify-between mb-4">
             <img class="h-16 w-16" src="mangu_logo.jpg" alt="Mang'u High School Logo" />
             <h1 class="text-2xl font-bold text-center flex-grow">Dining Hall Seating Arrangement</h1>
-            <button onclick="window.location.href='index.html'" class="text-white p-2 rounded-full hover:bg-blue-700" title="Home">
+            <button onclick="window.location.href='index.html'" class="text-white p-2 rounded-full hover:bg-blue-700"
+                title="Home">
                 <i class="fas fa-home"></i>
             </button>
         </header>
@@ -43,6 +55,41 @@
     <div id="print-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
         <div class="bg-white p-6 rounded-lg shadow-lg transition-transform transform scale-95">
             <h2 class="text-xl font-bold mb-4">Select Arrangement to Print</h2>
+            <label for="class-select" class="block mb-2">Class:</label>
+            <select id="class-select" class="mb-2 p-2 border rounded">
+                <option value="">Select Class</option>
+                <option value="Form 1">Form 1</option>
+                <option value="Form 2">Form 2</option>
+                <option value="Form 3">Form 3</option>
+                <option value="Form 4">Form 4</option>
+            </select>
+
+            <label for="stream-select" class="block mb-2">Stream:</label>
+            <select id="stream-select" class="mb-2 p-2 border rounded">
+                <option value="">Select Stream</option>
+                <option value="MIT">MIT</option>
+                <option value="Stanford">Stanford</option>
+                <option value="Pittsburgh">Pittsburgh</option>
+                <option value="Edinburgh">Edinburgh</option>
+                <option value="Cornell">Cornell</option>
+                <option value="Cambridge">Cambridge</option>
+                <option value="Duke">Duke</option>
+                <option value="Melbourne">Melbourne</option>
+                <option value="Dayton">Dayton</option>
+                <option value="Berkeley">Berkeley</option>
+                <option value="Amherst">Amherst</option>
+                <option value="Hopkins">Hopkins</option>
+                <option value="Michigan">Michigan</option>
+                <option value="Oxford">Oxford</option>
+                <option value="Princeton">Princeton</option>
+                <option value="Yale">Yale</option>
+                <option value="Cape">Cape</option>
+                <option value="Harvard">Harvard</option>
+                <option value="Chicago">Chicago</option>
+                <option value="Columbia">Columbia</option>
+                <option value="Dartmouth">Dartmouth</option>
+            </select>
+
             <button id="print-students" class="bg-blue-500 text-white px-4 py-2 rounded mb-2 hover:bg-blue-600 transition">Print Students Arrangement</button>
             <button id="print-muslims" class="bg-green-500 text-white px-4 py-2 rounded mb-2 hover:bg-green-600 transition">Print Muslims Arrangement</button>
             <button id="print-sportsmen" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">Print Sportsmen Arrangement</button>
@@ -73,7 +120,7 @@
 
         // Function to create a table for students
         function createTable(title, studentList) {
-            const tableDiv = document .createElement('div');
+            const tableDiv = document.createElement('div');
             tableDiv.className = "p-4 bg-white shadow-md rounded-lg w-full";
             const tableTitle = document.createElement('h3');
             tableTitle.className = "font-bold mb-2 text-lg text-gray-800";
@@ -147,65 +194,29 @@
         });
 
         document.getElementById('print-students').addEventListener('click', () => {
-            const generalStudents = students.filter(student => 
-                student.religious !== 'Muslim' && 
-                student.leadership !== 'Sportsman'
-            );
-            
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <html>
-                    <head>
-                        <title>General Students Arrangement</title>
-                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
-                    </head>
-                    <body>
-                        ${createTable('General Students Arrangement', generalStudents).outerHTML}
-                    </body>
-                </html>
-            `);
-            printWindow.document.close();
-            printWindow.print();
-            document.getElementById('print-modal').classList.add('hidden');
-        });
+            const selectedClass = document.getElementById('class-select').value;
+            const selectedStream = document.getElementById('stream-select').value;
 
-        document.getElementById('print-muslims').addEventListener('click', () => {
-            const muslims = students.filter(student => student.religious === 'Muslim');
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <html>
-                    <head>
-                        <title>Muslim Students Arrangement</title>
-                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
-                    </head>
-                    <body>
-                        ${createTable('Muslim Students', muslims).outerHTML}
-                    </body>
-                </html>
-            `);
-            printWindow.document.close();
-            printWindow.print();
-            document.getElementById('print-modal').classList.add('hidden');
-        });
+            const filtered = students.filter(s => s.class === selectedClass && s.stream === selectedStream);
 
-        document.getElementById ('print-sportsmen').addEventListener('click', () => {
-            const sportsmen = students.filter(student => student.leadership === 'Sportsman');
-            const printWindow = window.open('', '_blank');
-            printWindow.document.write(`
-                <html>
-                    <head>
-                        <title>Sportsmen Arrangement</title>
-                        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
-                    </head>
-                    <body>
-                        ${createTable('Sportsmen', sportsmen).outerHTML}
-                    </body>
-                </html>
-            `);
+            if (filtered.length === 0) {
+                alert('No students found for that class and stream');
+                return;
+            }
+
+            const printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<html><head><title>Students Print</title></head><body>');
+            printWindow.document.write(`<h1>Students - ${selectedClass} - ${selectedStream}</h1>`);
+            printWindow.document.write('<table border="1"><tr><th>Admission No.</th><th>Name</th><th>Class</th><th>Stream</th></tr>');
+            filtered.forEach(student => {
+                printWindow.document.write(`<tr><td>${student.admissionNo}</td><td>${student.name}</td><td>${student.class}</td><td>${student.stream}</td></tr>`);
+            });
+            printWindow.document.write('</table>');
+            printWindow.document.write('</body></html>');
             printWindow.document.close();
             printWindow.print();
-            document.getElementById('print-modal').classList.add('hidden');
         });
     </script>
 </body>
+
 </html>

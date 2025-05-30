@@ -5,9 +5,17 @@
   <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
   <title>View Flagged Students</title>
   <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/3.3.5/tailwind.min.css" rel="stylesheet">
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <!-- Favicon and App Icons -->
+<link rel="icon" type="image/png" sizes="32x32" href="favicon_io\favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon_io\favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon_io\apple-touch-icon.png">
+<link rel="android-chrome-512x512" type="image/png" sizes="32x32" href="favicon_io\android-chrome-512x512.png">
+<link rel="android-chrome-192x192 sizes="180x180" href="favicon_io\android-chrome-192x192.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="theme-color" content="#ffffff">
   <style>
     body {
       font-family: 'Roboto', sans-serif;
@@ -65,6 +73,7 @@
           <th>Name</th>
           <th>Class</th>
           <th>Comments</th>
+          <th>Teacher</th>
           <th>Date & Time</th>
         </tr>
       </thead>
@@ -85,15 +94,12 @@
           acc[flag.admissionNo] = {
             name: flag.name,
             class: flag.class,
-            comments: []
+            comments: [],
+            teacher: flag.teacherName,
+            dateTime: flag.dateTime
           };
         }
-        // Store each comment with its teacher and dateTime
-        acc[flag.admissionNo].comments.push({
-          text: flag.comments,
-          teacher: flag.teacherName,
-          dateTime: flag.dateTime
-        });
+        acc[flag.admissionNo].comments.push(flag.comments);
         return acc;
       }, {});
 
@@ -101,15 +107,18 @@
       const tableBody = document.getElementById("flagged-students-table");
       tableBody.innerHTML = Object.keys(groupedFlags).map(admissionNo => {
         const student = groupedFlags[admissionNo];
-        return student.comments.map(comment => `
+        const commentsMerged = student.comments.join('<br>'); // Merge comments with line breaks
+
+        return `
           <tr>
             <td>${admissionNo}</td>
             <td>${student.name}</td>
             <td>${student.class}</td>
-            <td>${comment.text} <br> <strong>Teacher:</strong> ${comment.teacher}</td>
-            <td>${new Date(comment.dateTime).toLocaleString()}</td>
+            <td rowspan="${student.comments.length}">${commentsMerged}</td>
+            <td>${student.teacher}</td>
+            <td>${new Date(student.dateTime).toLocaleString()}</td>
           </tr>
-        `).join(""); // Create table rows for each comment
+        `;
       }).join(""); // Create table rows for each flagged student
     }
 
@@ -129,7 +138,8 @@
           <td>${flag.admissionNo}</td>
           <td>${flag.name}</td>
           <td>${flag.class}</td>
-          <td>${flag.comments} <br> <strong>Teacher:</strong> ${flag.teacherName}</td>
+          <td>${flag.comments}</td>
+          <td>${flag.teacherName}</td>
           <td>${new Date(flag.dateTime).toLocaleString()}</td>
         </tr>
       `).join("");

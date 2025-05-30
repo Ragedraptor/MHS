@@ -1,27 +1,18 @@
 require('dotenv').config();
 
+const JWT_SECRET = process.env.JWT_SECRET;
+const SESSION_SECRET = process.env.SESSION_SECRET;
 const express = require('express');
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const session = require('express-session');
 const bodyParser = require('body-parser');
 const cors = require('cors');
-const path = require('path');
+const path = require('path'); // Import path module
 
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middleware
-app.use(cors());
-app.use(bodyParser.json());
-app.use(session({
-  secret: process.env.SESSION_SECRET || 'default_session_secret',
-  resave: false,
-  saveUninitialized: true,
-  cookie: { secure: false } // Set to true if using HTTPS
-}));
-
-// Serve static files from the current directory
 app.use(express.static(__dirname));
 
 // Serve index.html when accessing "/"
@@ -29,9 +20,19 @@ app.get('/', (req, res) => {
   res.sendFile(path.join(__dirname, 'index.html'));
 });
 
+// Middleware
+app.use(cors());
+app.use(bodyParser.json());
+app.use(session({
+  secret: 'your-secret-key',
+  resave: false,
+  saveUninitialized: true,
+  cookie: { secure: false } // Set to true if using HTTPS
+}));
+
 // Mock user data (in a real application, use a database)
 const users = [
-  { username: 'MANGU@2025', password: bcrypt.hashSync('Mangu@1925', 10) } // Store hashed password
+  { username: 'ADMIN2025', password: bcrypt.hashSync('Mangu@1925', 10) } // Store hashed password
 ];
 
 // Mock student data
@@ -43,7 +44,7 @@ app.post('/login', async (req, res) => {
   const user = users.find(u => u.username === username);
   
   if (user && await bcrypt.compare(password, user.password)) {
-    const token = jwt.sign({ username: user.username }, process.env.JWT_SECRET || 'default_jwt_secret', { expiresIn: '1h' });
+    const token = jwt.sign({ username: user.username }, 'your_jwt_secret', { expiresIn: '1h' });
     res.json({ success: true, token });
   } else {
     res.status(401).json({ success: false, message: 'Invalid credentials' });
@@ -55,7 +56,7 @@ function isAuthenticated(req, res, next) {
   const token = req.headers['authorization']?.split(' ')[1];
   if (!token) return res.status(401).json({ message: 'Unauthorized' });
 
-  jwt.verify(token, process.env.JWT_SECRET || 'default_jwt_secret', (err, decoded) => {
+  jwt.verify(token, 'your_jwt_secret', (err, decoded) => {
     if (err) return res.status(401).json({ message: 'Unauthorized' });
     req.user = decoded;
     next();
@@ -95,13 +96,7 @@ app.delete('/students/:admissionNo', isAuthenticated, (req, res) => {
   res.status(204).send();
 });
 
-// Error handling middleware
-app.use((err, req, res, next) => {
-  console.error(err.stack);
-  res.status(500).json({ message: 'Something went wrong!' });
-});
-
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server running at http://localhost:${PORT}`);
+  console.log(`Server running on http://localhost:${PORT}`);
 });
