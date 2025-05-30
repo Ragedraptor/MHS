@@ -5,10 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="description" content="Welcome to the MHS website, your go-to resource for information and updates.">
   <meta name="keywords" content="MHS website, MHS, education, resources, dining hall, dashboard">
-  <title>Dining Hall Dashboard - MHS Website</title>
+  <title>MHS website</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
   <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <!-- Favicon and App Icons -->
+<link rel="icon" type="image/png" sizes="32x32" href="favicon_io\favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon_io\favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon_io\apple-touch-icon.png">
+<link rel="android-chrome-512x512" type="image/png" sizes="32x32" href="favicon_io\android-chrome-512x512.png">
+<link rel="android-chrome-192x192 sizes="180x180" href="favicon_io\android-chrome-192x192.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="theme-color" content="#ffffff">
+
 </head>
   <style>
   /* Background image only for login page */
@@ -16,7 +26,7 @@
   .login-bg {
     background: url('blue-night_DBUU6N5YUY.jpg') no-repeat center center fixed;
     background-size: cover;
-  } // Ensure this closing brace matches an opening brace in the code structure
+  } 
   
   body {
     font-family: 'Roboto', sans-serif;
@@ -296,33 +306,43 @@
       </form>
     </div>
   </div>
-
-  <!-- Dashboard (initially hidden) -->
-  <div id="dashboard" class="dashboard hidden">
-    <!-- Header -->
-    <div class="header">
-      <img class="h-16 w-16" src="mangu_logo.jpg" alt="Mang'u High School Logo" />
-      <h1 class="text-xl">MANG'U HIGH SCHOOL</h1>
-      <div class="flex items-center">
-        <button onclick="openSettings()" class="icon-button" title="Settings">
-          <i class="fas fa-cog"></i>
-        </button>
-        <button onclick="window.location.href='dining_hall.html'" class="icon-button" title="Dining Hall">
-          <i class="fas fa-utensils fa-lg"></i>
-        </button>
-        <button onclick="window.location.href='flag_student.html'" class="icon-button" title="Flag Student">
-          <i class="fas fa-flag"></i>
-        </button>
-        <button onclick="window.location.href='view_flagged_students.html'" class="icon-button" title="View Flagged Students">
-          <i class="fas fa-eye"></i>
-        </button>
-        <button id="logout-btn" class="icon-button" title="Logout" onclick="logout()">
-          <i class="fas fa-sign-out-alt"></i>
-        </button>
-      </div>
+<!-- Dashboard (initially hidden) -->
+<div id="dashboard" class="dashboard hidden">
+  <!-- Header -->
+  <div class="header">
+    <img class="h-16 w-16" src="mangu_logo.jpg" alt="Mang'u High School Logo" />
+    <h1 class="text-xl">MANG'U HIGH SCHOOL</h1>
+    <div class="flex items-center">
+      <button onclick="openSettings()" class="icon-button" title="Settings">
+        <i class="fas fa-cog"></i>
+      </button>
+      <button onclick="window.location.href='dining_hall.html'" class="icon-button" title="Dining Hall">
+        <i class="fas fa-utensils fa-lg"></i>
+      </button>
+      <button onclick="window.location.href='flag_student.html'" class="icon-button" title="Flag Student">
+        <i class="fas fa-flag"></i>
+      </button>
+      <button onclick="window.location.href='view_flagged_students.html'" class="icon-button" title="View Flagged Students">
+        <i class="fas fa-eye"></i>
+      </button>
+       <!-- Submit Leave Request Logo Button (Icon) -->
+       <button onclick="window.location.href='leave_out_form.html'" class="icon-button" title="Submit Leave Request">
+        <i class="fas fa-paper-plane"></i>
+       </button>
+       <button onclick="window.location.href='view_reports.html'" class="icon-button" title="View Reports">
+        <i class="fas fa-file"></i>
+       </button>
+       
+      
+      
+      <button id="logout-btn" class="icon-button" title="Logout" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+      
+     
     </div>
   </div>
-</body>
+</div>
 
    
 
@@ -400,7 +420,7 @@
           // Update the stats
           document.getElementById('total-students').innerText = totalStudents;
           document.getElementById('sent-home').innerText = sentHomeCount;
-      }
+      
 
       // Call the updateStats function to fetch and display the data
       updateStats();
@@ -1131,7 +1151,7 @@ function validateLogin(event) {
     const username = document.getElementById("username").value;
     const password = document.getElementById("password").value;
 
-    if (username === "MHSDININGHALL" && password === "Mangu@1925") {
+    if (username === "ADMIN2025" && password === "Mangu@1925") {
         sessionStorage.setItem("loggedIn", "true");
         showDashboard(); // Show dashboard on successful login
     } else {
@@ -1242,12 +1262,12 @@ function logout() {
                 "admissionNo": "12345",
                 "name": "John Doe",
                 "class": "2 Cornell",
-                "status": "Sick",
-                "religious": "None",
+                 "religious": "None",
                 "leadership": "Sportsman",
                 "lastUpdated": "2023-10-01"
             },
             {
+               "status": "Sick",
                 "admissionNo": "12346",
                 "name": "Jane Smith",
                 "class": "2 Cornell",
