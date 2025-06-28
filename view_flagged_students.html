@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>View Flagged Students</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+    <!-- Favicon and App Icons -->
+<link rel="icon" type="image/png" sizes="32x32" href="favicon_io\favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon_io\favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon_io\apple-touch-icon.png">
+<link rel="android-chrome-512x512" type="image/png" sizes="32x32" href="favicon_io\android-chrome-512x512.png">
+<link rel="android-chrome-192x192 sizes="180x180" href="favicon_io\android-chrome-192x192.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="theme-color" content="#ffffff">
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f4f4;
+    }
+    .container {
+      max-width: 800px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+    }
+    th, td {
+      border: 1px solid #ddd;
+      padding: 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #0077b6; /* Vibrant blue for table header */
+      color: white;
+    }
+    .search-container {
+      margin-bottom: 20px;
+    }
+    .home-button {
+      background-color: #0077b6; /* Home button color */
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 5px;
+      cursor: pointer;
+      margin-bottom: 20px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <button class="home-button" onclick="window.location.href='index.html'">
+      <i class="fas fa-home"></i> Home
+    </button>
+    <h2 class="text-2xl font-bold mb-4">Flagged Students</h2>
+    <div class="search-container">
+      <input type="text" id="search-input" placeholder="Search by Admission No. or Name" class="border p-2 w-3/4"/>
+      <button id="search-button" class="bg-blue-500 text-white px-4 py-2">Search</button>
+    </div>
+    <table>
+      <thead>
+        <tr>
+          <th>Admission No.</th>
+          <th>Name</th>
+          <th>Class</th>
+          <th>Comments</th>
+          <th>Teacher</th>
+          <th>Date & Time</th>
+        </tr>
+      </thead>
+      <tbody id="flagged-students-table">
+        <!-- Dynamic Flagged Student Data Goes Here -->
+      </tbody>
+    </table>
+  </div>
+
+  <script>
+    // Function to load flagged students from localStorage
+    function loadFlaggedStudents() {
+      const flags = JSON.parse(localStorage.getItem("flags")) || []; // Retrieve flags from localStorage
+
+      // Group flags by admission number
+      const groupedFlags = flags.reduce((acc, flag) => {
+        if (!acc[flag.admissionNo]) {
+          acc[flag.admissionNo] = {
+            name: flag.name,
+            class: flag.class,
+            comments: [],
+            teacher: flag.teacherName,
+            dateTime: flag.dateTime
+          };
+        }
+        acc[flag.admissionNo].comments.push(flag.comments);
+        return acc;
+      }, {});
+
+      // Populate the table with flagged students
+      const tableBody = document.getElementById("flagged-students-table");
+      tableBody.innerHTML = Object.keys(groupedFlags).map(admissionNo => {
+        const student = groupedFlags[admissionNo];
+        const commentsMerged = student.comments.join('<br>'); // Merge comments with line breaks
+
+        return `
+          <tr>
+            <td>${admissionNo}</td>
+            <td>${student.name}</td>
+            <td>${student.class}</td>
+            <td rowspan="${student.comments.length}">${commentsMerged}</td>
+            <td>${student.teacher}</td>
+            <td>${new Date(student.dateTime).toLocaleString()}</td>
+          </tr>
+        `;
+      }).join(""); // Create table rows for each flagged student
+    }
+
+    // Function to filter flagged students based on search input
+    function filterStudents() {
+      const searchValue = document.getElementById("search-input").value.toLowerCase();
+      const flags = JSON.parse(localStorage.getItem("flags")) || [];
+      const filteredFlags = flags.filter(flag => 
+        flag.admissionNo.toLowerCase().includes(searchValue) || 
+        flag.name.toLowerCase().includes(searchValue)
+      );
+
+      // Populate the table with filtered flagged students
+      const tableBody = document.getElementById("flagged-students-table");
+      tableBody.innerHTML = filteredFlags.map(flag => `
+        <tr>
+          <td>${flag.admissionNo}</td>
+          <td>${flag.name}</td>
+          <td>${flag.class}</td>
+          <td>${flag.comments}</td>
+          <td>${flag.teacherName}</td>
+          <td>${new Date(flag.dateTime).toLocaleString()}</td>
+        </tr>
+      `).join("");
+    }
+
+    // Load flagged students when the page loads
+    window.onload = loadFlaggedStudents;
+
+    // Add event listener for the search button
+    document.getElementById("search-button").addEventListener("click", filterStudents);
+  </script>
+</body>
+</html>

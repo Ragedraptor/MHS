@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+  <title>Flag Student</title>
+  <!-- Favicon and App Icons -->
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon_io\favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="favicon_io\favicon-16x16.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="favicon_io\apple-touch-icon.png">
+  <link rel="android-chrome-512x512" type="image/png" sizes="32x32" href="favicon_io\android-chrome-512x512.png">
+  <link rel="android-chrome-192x192 sizes="180x180" href="favicon_io\android-chrome-192x192.png">
+  <link rel="manifest" href="/site.webmanifest">
+  <meta name="msapplication-TileColor" content="#ffffff">
+  <meta name="theme-color" content="#ffffff">
+<link rel="manifest" href="/site.webmanifest">
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <style>
+    body {
+      font-family: 'Roboto', sans-serif;
+      background-color: #f4f4f4;
+    }
+    .container {
+      max-width: 600px;
+      margin: 50px auto;
+      padding: 20px;
+      background-color: white;
+      border-radius: 8px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2 class="text-2xl font-bold mb-4">Flag Student</h2>
+    <form id="flag-student-form">
+      <div class="mb-4">
+        <label class="block text-lg" for="admission-no">Admission No.</label>
+        <input type="text" id="admission-no" class="border w-full p-2" required placeholder="Enter Admission No."/>
+      </div>
+      <div class="mb-4">
+        <label class="block text-lg" for="student-name">Student Name</label>
+        <input type="text" id="student-name" class="border w-full p-2" readonly placeholder="Student Name"/>
+      </div>
+      <div class="mb-4">
+        <label class="block text-lg" for="student-class">Class</label>
+        <input type="text" id="student-class" class="border w-full p-2" readonly placeholder="Class"/>
+      </div>
+      <div class="mb-4">
+        <label class="block text-lg" for="comments">Comments</label>
+        <textarea id="comments" class="border w-full p-2" rows="4" required placeholder="Enter your comments..."></textarea>
+      </div>
+      <div class="mb-4">
+        <label class="block text-lg" for="teacher-name">Teacher's Name</label>
+        <input type="text" id="teacher-name" class="border w-full p-2" required placeholder="Enter your name..."/>
+      </div>
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2">Submit Flag</button>
+    </form>
+  </div>
+
+  <script>
+    // Event listener for admission number input
+    document.getElementById("admission-no").addEventListener("input", function() {
+      const admissionNo = this.value;
+      const students = JSON.parse(localStorage.getItem("students")) || [];
+      const student = students.find(s => s.admissionNo === admissionNo);
+
+      if (student) {
+        // Populate the name and class fields if the student is found
+        document.getElementById("student-name").value = student.name;
+        document.getElementById("student-class").value = student.class;
+      } else {
+        // Clear the fields if no student is found
+        document.getElementById("student-name").value = '';
+        document.getElementById("student-class").value = '';
+      }
+    });
+
+    document.getElementById("flag-student-form").addEventListener("submit", function(event) {
+      event.preventDefault();
+
+      const admissionNo = document.getElementById("admission-no").value;
+      const comments = document.getElementById("comments").value;
+      const teacherName = document.getElementById("teacher-name").value;
+      const dateTime = new Date().toISOString(); // Get current date and time
+
+      // Retrieve the students array from localStorage
+      const students = JSON.parse(localStorage.getItem("students")) || [];
+      const student = students.find(s => s.admissionNo === admissionNo);
+
+      if (student) {
+        const flagging = {
+          admissionNo: student.admissionNo,
+          name: student.name, // Add the student's name
+          class: student.class, // Add the student's class
+          comments,
+          teacherName,
+          dateTime // Store the date and time
+        };
+        // Retrieve existing flags from localStorage or initialize an empty array
+        const flags = JSON.parse(localStorage.getItem("flags")) || [];
+        flags.push(flagging); // Add the new flagging to the array
+
+        // Save the updated flags array back to localStorage
+        localStorage.setItem("flags", JSON.stringify(flags));
+
+        alert("Student flagged successfully!"); // Notify the user
+        window.location.href = "view_flagged_students.html"; // Redirect to the flagged students page
+      } else {
+        alert("Student not found. Please check the admission number."); // Notify if student is not found
+      }
+    });
+  </script>
+</body>
+</html>

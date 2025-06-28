@@ -1,0 +1,222 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css">
+      <!-- Favicon and App Icons -->
+<link rel="icon" type="image/png" sizes="32x32" href="favicon_io\favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon_io\favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon_io\apple-touch-icon.png">
+<link rel="android-chrome-512x512" type="image/png" sizes="32x32" href="favicon_io\android-chrome-512x512.png">
+<link rel="android-chrome-192x192 sizes="180x180" href="favicon_io\android-chrome-192x192.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="theme-color" content="#ffffff">
+    <title>Dining Hall Seating Arrangement</title>
+</head>
+
+<body class="bg-gray-100">
+    <div class="container mx-auto p-4">
+        <header class="bg-blue-600 text-white p-4 rounded-lg shadow-md flex items-center justify-between mb-4">
+            <img class="h-16 w-16" src="mangu_logo.jpg" alt="Mang'u High School Logo" />
+            <h1 class="text-2xl font-bold text-center flex-grow">Dining Hall Seating Arrangement</h1>
+            <button onclick="window.location.href='index.html'" class="text-white p-2 rounded-full hover:bg-blue-700"
+                title="Home">
+                <i class="fas fa-home"></i>
+            </button>
+        </header>
+
+        <div class="mb-4 flex justify-around">
+            <button id="show-students" class="bg-blue-500 text-white px-4 py-2 rounded hover:bg-blue-600 transition">Students Arrangement</button>
+            <button id="show-muslims" class="bg-green-500 text-white px-4 py-2 rounded hover:bg-green-600 transition">Muslims Arrangement</button>
+            <button id="show-sportsmen" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">Sportsmen Arrangement</button>
+            <button id="print-button" type="button" title="Print" class="bg-red-500 text-white p-2 rounded hover:bg-red-600 transition">
+                <i class="fas fa-print"></i>
+            </button>
+        </div>
+
+        <section id="arrangement-section" class="mb-6">
+            <h2 class="text-xl font-semibold mb-2">Arrangement</h2>
+            <div id="class-tables" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                <!-- Tables will be dynamically inserted here -->
+            </div>
+        </section>
+
+        <footer class="mt-6">
+            <p class="text-center text-gray-600">© 2025 Mang'u High School. All rights reserved.</p>
+        </footer>
+    </div>
+
+    <!-- Modal for Print Selection -->
+    <div id="print-modal" class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg transition-transform transform scale-95">
+            <h2 class="text-xl font-bold mb-4">Select Arrangement to Print</h2>
+            <label for="class-select" class="block mb-2">Class:</label>
+            <select id="class-select" class="mb-2 p-2 border rounded">
+                <option value="">Select Class</option>
+                <option value="Form 1">Form 1</option>
+                <option value="Form 2">Form 2</option>
+                <option value="Form 3">Form 3</option>
+                <option value="Form 4">Form 4</option>
+            </select>
+
+            <label for="stream-select" class="block mb-2">Stream:</label>
+            <select id="stream-select" class="mb-2 p-2 border rounded">
+                <option value="">Select Stream</option>
+                <option value="MIT">MIT</option>
+                <option value="Stanford">Stanford</option>
+                <option value="Pittsburgh">Pittsburgh</option>
+                <option value="Edinburgh">Edinburgh</option>
+                <option value="Cornell">Cornell</option>
+                <option value="Cambridge">Cambridge</option>
+                <option value="Duke">Duke</option>
+                <option value="Melbourne">Melbourne</option>
+                <option value="Dayton">Dayton</option>
+                <option value="Berkeley">Berkeley</option>
+                <option value="Amherst">Amherst</option>
+                <option value="Hopkins">Hopkins</option>
+                <option value="Michigan">Michigan</option>
+                <option value="Oxford">Oxford</option>
+                <option value="Princeton">Princeton</option>
+                <option value="Yale">Yale</option>
+                <option value="Cape">Cape</option>
+                <option value="Harvard">Harvard</option>
+                <option value="Chicago">Chicago</option>
+                <option value="Columbia">Columbia</option>
+                <option value="Dartmouth">Dartmouth</option>
+            </select>
+
+            <button id="print-students" class="bg-blue-500 text-white px-4 py-2 rounded mb-2 hover:bg-blue-600 transition">Print Students Arrangement</button>
+            <button id="print-muslims" class="bg-green-500 text-white px-4 py-2 rounded mb-2 hover:bg-green-600 transition">Print Muslims Arrangement</button>
+            <button id="print-sportsmen" class="bg-yellow-500 text-white px-4 py-2 rounded hover:bg-yellow-600 transition">Print Sportsmen Arrangement</button>
+            <button id="close-modal" class="mt-4 text-red-500 hover:underline">Cancel</button>
+        </div>
+    </div>
+
+    <script>
+        let students = [];
+
+        // Load students from localStorage
+        document.addEventListener('DOMContentLoaded', () => {
+            try {
+                const storedData = localStorage.getItem('students');
+                if (!storedData) {
+                    alert('No student data found! Redirecting to main page...');
+                    window.location.href = 'index.html';
+                    return;
+                }
+                students = JSON.parse(storedData);
+                displayStudents();
+            } catch (error) {
+                console.error('Error loading student data:', error);
+                alert('Invalid student data format! Redirecting...');
+                window.location.href = 'index.html';
+            }
+        });
+
+        // Function to create a table for students
+        function createTable(title, studentList) {
+            const tableDiv = document.createElement('div');
+            tableDiv.className = "p-4 bg-white shadow-md rounded-lg w-full";
+            const tableTitle = document.createElement('h3');
+            tableTitle.className = "font-bold mb-2 text-lg text-gray-800";
+            tableTitle.innerText = title;
+            tableDiv.appendChild(tableTitle);
+
+            const table = document.createElement('table');
+            table.className = "min-w-full border-collapse border border-gray-300";
+            table.innerHTML = `
+                <thead>
+                    <tr class="bg-gray-200">
+                        <th class="py-2 px-4 border-b">Admission No.</th>
+                        <th class="py-2 px-4 border-b">Name</th>
+                        <th class="py-2 px-4 border-b">Class</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    ${studentList.map(student => `
+                        <tr class="hover:bg-gray-100">
+                            <td class="py-2 px-4 border-b">${student.admissionNo}</td>
+                            <td class="py-2 px-4 border-b">${student.name}</td>
+                            <td class="py-2 px-4 border-b">${student.class}</td>
+                        </tr>
+                    `).join('')}
+                </tbody>
+            `;
+            tableDiv.appendChild(table);
+            return tableDiv;
+        }
+
+        // Display functions
+        function displayStudents() {
+            const classTables = document.getElementById('class-tables');
+            classTables.innerHTML = '';
+            
+            const generalStudents = students.filter(student => 
+                student.religious !== 'Muslim' && 
+                student.leadership !== 'Sportsman'
+            );
+            
+            const studentTable = createTable('General Students Arrangement', generalStudents);
+            classTables.appendChild(studentTable);
+        }
+
+        function displayMuslims() {
+            const classTables = document.getElementById('class-tables');
+            classTables.innerHTML = '';
+            const muslims = students.filter(student => student.religious === 'Muslim');
+            classTables.appendChild(createTable('Muslim Students', muslims));
+        }
+
+        function displaySportsmen() {
+            const classTables = document.getElementById('class-tables');
+            classTables.innerHTML = '';
+            const sportsmen = students.filter(student => student.leadership === 'Sportsman');
+            classTables.appendChild(createTable('Sportsmen', sportsmen));
+        }
+
+        // Event Listeners
+        document.getElementById('show-students').addEventListener('click', displayStudents);
+        document.getElementById('show-muslims').addEventListener('click', displayMuslims);
+        document.getElementById('show-sportsmen').addEventListener('click', displaySportsmen);
+
+        // Print functionality
+        document.getElementById('print-button').addEventListener('click', () => {
+            document.getElementById('print-modal').classList.remove('hidden');
+        });
+
+        document.getElementById('close-modal').addEventListener('click', () => {
+            document.getElementById('print-modal').classList.add('hidden');
+        });
+
+        document.getElementById('print-students').addEventListener('click', () => {
+            const selectedClass = document.getElementById('class-select').value;
+            const selectedStream = document.getElementById('stream-select').value;
+
+            const filtered = students.filter(s => s.class === selectedClass && s.stream === selectedStream);
+
+            if (filtered.length === 0) {
+                alert('No students found for that class and stream');
+                return;
+            }
+
+            const printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<html><head><title>Students Print</title></head><body>');
+            printWindow.document.write(`<h1>Students - ${selectedClass} - ${selectedStream}</h1>`);
+            printWindow.document.write('<table border="1"><tr><th>Admission No.</th><th>Name</th><th>Class</th><th>Stream</th></tr>');
+            filtered.forEach(student => {
+                printWindow.document.write(`<tr><td>${student.admissionNo}</td><td>${student.name}</td><td>${student.class}</td><td>${student.stream}</td></tr>`);
+            });
+            printWindow.document.write('</table>');
+            printWindow.document.write('</body></html>');
+            printWindow.document.close();
+            printWindow.print();
+        });
+    </script>
+</body>
+
+</html>

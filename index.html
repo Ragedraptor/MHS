@@ -1,0 +1,1286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Welcome to the MHS website, your go-to resource for information and updates.">
+  <meta name="keywords" content="MHS website, MHS, education, resources, dining hall, dashboard">
+  <title>Mang'u High School</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap" rel="stylesheet"/>
+  <!-- Favicon and App Icons -->
+<link rel="icon" type="image/png" sizes="32x32" href="favicon_io\favicon-32x32.png">
+<link rel="icon" type="image/png" sizes="16x16" href="favicon_io\favicon-16x16.png">
+<link rel="apple-touch-icon" sizes="180x180" href="favicon_io\apple-touch-icon.png">
+<link rel="android-chrome-512x512" type="image/png" sizes="32x32" href="favicon_io\android-chrome-512x512.png">
+<link rel="android-chrome-192x192 sizes="180x180" href="favicon_io\android-chrome-192x192.png">
+<link rel="manifest" href="/site.webmanifest">
+<meta name="msapplication-TileColor" content="#ffffff">
+<meta name="theme-color" content="#ffffff">
+
+</head>
+  <style>
+  /* Background image only for login page */
+
+  .login-bg {
+    background: url('blue-night_DBUU6N5YUY.jpg') no-repeat center center fixed;
+    background-size: cover;
+  } 
+  
+  body {
+    font-family: 'Roboto', sans-serif;
+    background-color: #f4f4f4;
+  }
+  
+  #login-form {
+    height: 100vh; /* Full height for the login form */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: auto; /* Allow overflow but make sure content is scrollable if needed */
+  }
+  
+  .dashboard {
+  display: none; /* Ensure dashboard is hidden by default */
+  padding: 20px;
+  background-color: #e0e0e0; /* Soft gray background for the dashboard */
+  border-radius: 8px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+  
+  table {
+    width: 100%;
+    border-collapse: collapse;
+  }
+  
+  th, td {
+    border: 1px solid #ddd;
+    padding: 12px;
+    text-align: left;
+  }
+  
+  th {
+    background-color: #0077b6; /* Vibrant blue for table header */
+    color: white;
+  }
+  
+  .header {
+    background-color: #1b263b; /* Dark navy blue for header */
+    color: white;
+    padding: 15px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-radius: 8px 8px 0 0; /* Rounded top corners */
+  }
+  
+  .header h1 {
+    text-align: center;
+    flex-grow: 1; /* Center the title */
+    font-size: 1.5rem; /* Increase font size */
+  }
+  
+  .header .icon-button {
+    background: none; /* No background */
+    border: none; /* No border */
+    color: white; /* White text color */
+    cursor: pointer; /* Pointer cursor */
+    font-size: 1.5rem; /* Increase icon size */
+    margin-left: 10px; /* Space between icons */
+    transition: color 0.3s; /* Smooth transition for color change */
+  }
+  
+  .header .icon-button:hover {
+    color: #0077b6; /* Change color on hover */
+  }
+  
+  .header button {
+    background-color: #e74c3c; /* Red color for logout button */
+    border: none;
+    color: white;
+    padding: 10px 15px;
+    cursor: pointer;
+    border-radius: 5px;
+    transition: background-color 0.3s; /* Smooth transition */
+  }
+  
+  .header button:hover {
+    background-color: #c0392b; /* Darker red on hover */
+  }
+  
+  .stats {
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    justify-content: space-around;
+    margin: 20px 0;
+  }
+  
+  .stat-box {
+    background: #f8f9fa; /* Light gray background for stat boxes */
+    padding: 20px;
+    text-align: center;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    width: 30%;
+    margin-bottom: 20px; /* Space between boxes */
+    border: 1px solid #0077b6; /* Border color matching the theme */
+    transition: transform 0.2s; /* Add transition for hover effect */
+  }
+  
+  .stat-box:hover {
+    transform: scale(1.05); /* Slightly enlarge on hover */
+  }
+  
+  .actions {
+    margin: 20px 0;
+    display: flex;
+    flex-wrap: wrap; /* Allow wrapping on smaller screens */
+    justify-content: center; /* Center the actions */
+  }
+  
+  .notification {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    z-index: 1000;
+    display: none;
+  }
+  
+  /* Style for the login box */
+  .login-box {
+    background-color: #000; /* Black background for the login box */
+    color: white; /* White text color */
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.5);
+  }
+  
+  /* Input field styles */
+  input {
+    color: white; /* Text color for input fields */
+    background-color: #333; /* Dark background for input fields */
+  }
+  
+  input::placeholder {
+    color: #bbb; /* Light gray placeholder text */
+  }
+  
+  /* Search bar styles */
+  #search-bar {
+    color: white; /* White text color for search bar */
+    background-color: #333; /* Dark background for search bar */
+    width: 300px; /* Set a fixed width for the search bar */
+  }
+  
+  /* Button hover effects */
+  button {
+    transition: background-color 0.3s, transform 0.2s; /* Smooth transition */
+  }
+  
+  button:hover {
+    transform: scale(1.05); /* Slightly enlarge button on hover */
+  }
+  
+  /* Table row hover effect */
+  tr:hover {
+    background-color: #f1f1f1; /* Light gray background on row hover */
+  }
+  
+  /* ================= RESPONSIVE FIXES ONLY ================= */
+  @media (max-width: 768px) {
+    /* Header adjustments */
+    .header {
+      flex-wrap: wrap;
+      gap: 15px;
+      padding: 15px 10px;
+    }
+  
+    .header h1 {
+      width: 100%;
+      order: -1;
+      margin-bottom: 0;
+    }
+  
+    /* Stats grid */
+    .stats {
+      flex-wrap: wrap;
+      gap: 15px;
+    }
+  
+    .stat-box {
+      width: 100%;
+      margin: 0;
+    }
+  
+    /* Search bar */
+    #search-bar {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+  
+  @media (max-width: 480px) {
+    /* Table scrolling */
+    table {
+      display: block;
+      overflow-x: auto;
+      white-space: nowrap;
+    }
+  
+    #login-form {
+      height: auto; /* Let the login form adjust based on content */
+    }
+  }
+  
+  /* ================= UNIVERSAL MOBILE FIXES ================= */
+  @media (max-width: 640px) { /* Covers all phones */
+    .header {
+      flex-wrap: wrap;
+      gap: 12px;
+      padding: 12px;
+    }
+  
+    .header h1 {
+      width: 100%;
+      order: 1;
+      font-size: 1.3rem;
+      margin: 0 0 8px 0;
+    }
+  
+    /* Icon container */
+    .header-icons {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      order: 2;
+      flex: 1 1 100%;
+    }
+  
+    .header .icon-button {
+      margin: 0;
+      font-size: 1.3rem;
+      padding: 6px;
+      flex: 0 0 auto;
+    }
+  
+    /* Logout button */
+    .header > button:not(.icon-button) {
+      order: 3;
+      width: 100%;
+      margin-top: 8px;
+      padding: 10px;
+      font-size: 0.95rem;
+    }
+  }
+  
+  @media (max-width: 375px) { /* Extra small phones */
+    .header .icon-button {
+      font-size: 1.1rem;
+      padding: 4px;
+    }
+  
+    .header h1 {
+      font-size: 1.1rem;
+    }
+  }
+</style>  
+</head>
+<body class="login-bg">
+  <!-- Login Form -->
+  <div id="login-form" class="h-screen flex items-center justify-center">
+    <div class="login-box max-w-md w-full">
+      <img class="mx-auto h-32 w-32 mb-4" src="mangu_logo.jpg" alt="Mang'u High School Logo" />
+      <h2 class="text-3xl font-bold mb-6 text-center">Login</h2>
+      <form onsubmit="return validateLogin(event)">
+        <div class="mb-4">
+          <label class="block text-lg" for="username">Username</label>
+          <input class="w-full px-4 py-3 border rounded-lg" id="username" required type="text" placeholder="Enter your username"/>
+        </div>
+        <div class="mb-6">
+          <label class="block text-lg" for="password">Password</label>
+          <input class="w-full px-4 py-3 border rounded-lg" id="password" required type="password" placeholder="Enter your password"/>
+        </div>
+        <button class="w-full bg-blue-600 text-white py-3 rounded-lg hover:bg-blue-700" type="submit">Login</button>
+      </form>
+    </div>
+  </div>
+<!-- Dashboard (initially hidden) -->
+<div id="dashboard" class="dashboard hidden">
+  <!-- Header -->
+  <div class="header">
+    <img class="h-16 w-16" src="mangu_logo.jpg" alt="Mang'u High School Logo" />
+    <h1 class="text-xl">MANG'U HIGH SCHOOL</h1>
+    <div class="flex items-center">
+      <button onclick="openSettings()" class="icon-button" title="Settings">
+        <i class="fas fa-cog"></i>
+      </button>
+      <button onclick="window.location.href='dining_hall.html'" class="icon-button" title="Dining Hall">
+        <i class="fas fa-utensils fa-lg"></i>
+      </button>
+      <button onclick="window.location.href='flag_student.html'" class="icon-button" title="Flag Student">
+        <i class="fas fa-flag"></i>
+      </button>
+      <button onclick="window.location.href='view_flagged_students.html'" class="icon-button" title="View Flagged Students">
+        <i class="fas fa-eye"></i>
+      </button>
+       <!-- Submit Leave Request Logo Button (Icon) -->
+       <button onclick="window.location.href='leave_out_form.html'" class="icon-button" title="Submit Leave Request">
+        <i class="fas fa-paper-plane"></i>
+       </button>
+       <button onclick="window.location.href='view_reports.html'" class="icon-button" title="View Reports">
+        <i class="fas fa-file"></i>
+       </button>
+       
+      
+      
+      <button id="logout-btn" class="icon-button" title="Logout" onclick="logout()">
+        <i class="fas fa-sign-out-alt"></i>
+      </button>
+      
+     
+    </div>
+  </div>
+</div>
+
+   
+
+    <script>
+      // Function to update the "Last updated" timestamp
+      function setLastUpdated() {
+        const now = new Date();
+        const lastUpdatedElement = document.getElementById('last-updated');
+        if (lastUpdatedElement) {
+          lastUpdatedElement.textContent = `Last updated: ${now.toLocaleString()}`;
+        }
+      }
+    
+      // Function to handle Dining Hall button click
+      function openDiningHall() {
+        // Redirect to the dining hall page
+        window.location.href = 'dining_hall.html'; // Change this to your actual dining hall page URL
+      }
+    
+      // Call the function when the dashboard is loaded
+      window.onload = function() {
+        setLastUpdated();
+    
+        const dashboard = document.getElementById('dashboard');
+        const loginForm = document.getElementById('login-form');
+    
+        if (dashboard) dashboard.style.display = 'block'; // Show the dashboard
+        if (loginForm) loginForm.style.display = 'none'; // Hide the login form
+      };
+    </script>
+    
+    </div>
+  </div>
+    <!-- Quick Stats -->
+    <div class="stats">
+      <div class="stat-box">
+          <h3>Total Students</h3>
+          <p id="total-students">0</p>
+      </div>
+      <div class="stat-box">
+          <h3>Sent Home</h3>
+          <p id="sent-home">0</p>
+      </div>
+  </div>
+    <script>
+      function updateStats(students) {
+    const totalStudents = students.length; // Total number of students
+    const sentHomeCount = students.filter(student => student.status === 'Suspended' || student.status === 'Expelled').length; // Count of students sent home
+
+    // Update the stats in the dashboard
+    document.getElementById('total-students').innerText = totalStudents;
+    document.getElementById('sent-home').innerText = sentHomeCount;
+}
+      // Function to update the stats on the page
+      function updateStats(students) {
+    const totalStudents = students.length; // Total number of students
+    const sentHomeCount = students.filter(student => 
+        student.status === 'Suspended' || 
+        student.status === 'Sick'
+    ).length; // Count of students sent home or sick
+
+    // Update the stats in the dashboard
+    document.getElementById('total-students').innerText = totalStudents;
+    document.getElementById('sent-home').innerText = sentHomeCount;
+}
+
+          // Loop through the rows to count "Sent Home"
+          for (let i = 1; i < table.rows.length; i++) { // Start from 1 to skip header
+              const status = table.rows[i].cells[1].innerText; // Get the status cell
+              if (status === 'Sent Home') {
+                  sentHomeCount++;
+              }
+          }
+
+          // Update the stats
+          document.getElementById('total-students').innerText = totalStudents;
+          document.getElementById('sent-home').innerText = sentHomeCount;
+      
+
+      // Call the updateStats function to fetch and display the data
+      updateStats();
+  </script>
+    <!-- Search & Filters -->
+    <div class="actions">
+      <input type="text" id="search-bar" placeholder="Search by Name or Admission No." class="border p-2">
+      <button onclick="searchStudent()" class="bg-blue-500 text-white px-4 py-2 ml-2">
+        <i class="fas fa-search"></i>
+      </button>
+      
+      <!-- Class Selection Dropdown -->
+      <select id="class-select" class="border p-2 ml-2" onchange="populateStreamOptions()">
+        <option value="">Select Class</option>
+        <option value="Form 2">Form 2</option>
+        <option value="Form 3">Form 3</option>
+        <option value="Form 4">Form 4</option>
+      </select>
+
+      <!-- Stream Selection Dropdown -->
+      <select id="stream-select" class="border p-2 ml-2">
+        <option value="">Select Stream</option>
+        <!-- Options will be populated based on the selected class -->
+      </select>
+      
+      <!-- Print Class List Button -->
+      <button onclick="printClassList()" class="bg-yellow-500 text-white px-4 py-2 ml-2">Print Class List</button>
+    </div>
+
+    <!-- Settings Modal -->
+    <div id="settings-modal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+      <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+        <h2 class="text-2xl font-bold mb-4">Settings</h2>
+        <div class="actions">
+          <button onclick="backupData()" class="bg-blue-500 text-white px-4 py-2">Backup Data</button>
+          <input type="file" id="file-input" accept=".json" class="ml-2" onchange="restoreData(event)" style="display: none;" />
+          <button onclick="document.getElementById('file-input').click();" class="bg-green-500 text-white px-4 py-2">Restore Data</button>
+        </div>
+        <button onclick="closeSettings()" class="bg-gray-500 text-white px-4 py-2 mt-4">Close</button>
+      </div>
+    </div>
+    <script>
+      // Add these functions to your existing JavaScript
+  
+      // Open Settings Modal
+      function openSettings() {
+          document.getElementById('settings-modal').classList.remove('hidden');
+      }
+  
+      // Close Settings Modal
+      function closeSettings() {
+          document.getElementById('settings-modal').classList.add('hidden');
+      }
+  
+      // Existing backup/restore functions
+      function backupData() {
+          // ... (previous backup code) ...
+      }
+  
+      function restoreData(event) {
+          // ... (previous restore code) ...
+      }
+  </script>
+  
+  <!-- Add this to your CSS for modal responsiveness -->
+  <style>
+      /* Mobile-friendly modal styling */
+      #settings-modal {
+          backdrop-filter: blur(2px);
+      }
+  
+      #settings-modal > div {
+          width: 90%;
+          max-width: 400px;
+          margin: 1rem;
+      }
+  
+      @media (max-width: 640px) {
+          #settings-modal .actions {
+              flex-direction: column;
+              gap: 0.5rem;
+          }
+          
+          #settings-modal button {
+              width: 100%;
+              margin: 0;
+              padding: 0.75rem;
+          }
+      }
+  </style>
+  <!-- Add SheetJS library -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+<script>
+    // Backup to Excel
+    function backupData() {
+        const students = JSON.parse(localStorage.getItem("students")) || [];
+        if (students.length === 0) {
+            showNotification("No data to backup!", "error");
+            return;
+        }
+
+        try {
+            // Create worksheet
+            const ws = XLSX.utils.json_to_sheet(students.map(student => ({
+                "Admission No.": student.admissionNo,
+                "Name": student.name,
+                "Class": student.class,
+                "Status": student.status,
+                "Religious": student.religious,
+                "Leadership": student.leadership,
+                "Last Updated": student.lastUpdated
+            })));
+
+            // Create workbook
+            const wb = XLSX.utils.book_new();
+            XLSX.utils.book_append_sheet(wb, ws, "Students");
+
+            // Save file
+            XLSX.writeFile(wb, `students_backup_${new Date().toISOString().split('T')[0]}.xlsx`);
+            showNotification("Excel backup created successfully!");
+        } catch (error) {
+            console.error("Backup failed:", error);
+            showNotification("Backup failed! Please try again.", "error");
+        }
+    }
+
+    // Restore from Excel
+    function restoreData(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            try {
+                const data = new Uint8Array(e.target.result);
+                const workbook = XLSX.read(data, { type: 'array' });
+                
+                // Get first worksheet
+                const ws = workbook.Sheets[workbook.SheetNames[0]];
+                const jsonData = XLSX.utils.sheet_to_json(ws);
+
+                // Validate and format data
+                const students = jsonData.map(record => ({
+                    admissionNo: record["Admission No."]?.toString() || "",
+                    name: record["Name"]?.toString() || "",
+                    class: record["Class"]?.toString() || "",
+                    status: record["Status"]?.toString() || "Normal",
+                    religious: record["Religious"]?.toString() || "None",
+                    leadership: record["Leadership"]?.toString() || "None",
+                    lastUpdated: record["Last Updated"]?.toString() || new Date().toISOString().split('T')[0]
+                }));
+
+                // Save to localStorage
+                localStorage.setItem("students", JSON.stringify(students));
+                
+                // Refresh data
+                loadDashboardData();
+                showNotification("Data restored from Excel successfully!");
+                closeSettings();
+            } catch (error) {
+                console.error("Restore failed:", error);
+                showNotification("Invalid Excel file. Please check the format.", "error");
+            }
+        };
+
+        reader.onerror = function(error) {
+            showNotification("Error reading file. Please try again.", "error");
+        };
+
+        reader.readAsArrayBuffer(file);
+    }
+</script>
+<script>
+  async function restoreData(event) {
+      const file = event.target.files[0];
+      if (!file) return;
+
+      const reader = new FileReader();
+      
+      reader.onload = async function(e) {
+          try {
+              // Read Excel file
+              const data = new Uint8Array(e.target.result);
+              const workbook = XLSX.read(data, { type: 'array' });
+              const ws = workbook.Sheets[workbook.SheetNames[0]];
+              const excelData = XLSX.utils.sheet_to_json(ws);
+
+              // Get existing students
+              const existingStudents = JSON.parse(localStorage.getItem("students")) || [];
+              const admissionNumbers = new Set(existingStudents.map(s => s.admissionNo));
+
+              // Process Excel data
+              const newStudents = excelData.map(record => {
+                  // Data validation
+                  if (!record['Admission No.'] || !record['Name']) {
+                      throw new Error('Missing required fields in Excel file');
+                  }
+
+                  return {
+                      admissionNo: record['Admission No.'].toString().trim(),
+                      name: record['Name'].toString().trim(),
+                      class: record['Class']?.toString().trim() || '',
+                      status: record['Status']?.toString().trim() || 'Normal',
+                      religious: record['Religious']?.toString().trim() || 'None',
+                      leadership: record['Leadership']?.toString().trim() || 'None',
+                      lastUpdated: new Date().toISOString().split('T')[0]
+                  };
+              });
+
+              // Merge data: Update existing and add new
+              const updatedStudents = existingStudents.map(student => {
+                  const excelStudent = newStudents.find(s => 
+                      s.admissionNo === student.admissionNo
+                  );
+                  return excelStudent || student;
+              });
+
+              // Add completely new students
+              newStudents.forEach(student => {
+                  if (!admissionNumbers.has(student.admissionNo)) {
+                      updatedStudents.push(student);
+                  }
+              });
+
+              // Save merged data
+              localStorage.setItem("students", JSON.stringify(updatedStudents));
+              
+              // Refresh and notify
+              loadDashboardData();
+              showNotification(`
+                  ${newStudents.length} students processed:
+                  ${newStudents.length - (updatedStudents.length - existingStudents.length)} updated,
+                  ${updatedStudents.length - existingStudents.length} new added
+              `);
+              closeSettings();
+          } catch (error) {
+              console.error("Restore failed:", error);
+              showNotification(`Restore failed: ${error.message}`, "error");
+          }
+      };
+
+      reader.onerror = function() {
+          showNotification("Error reading file. Please try again.", "error");
+      };
+
+      reader.readAsArrayBuffer(file);
+  }
+</script>
+
+<!-- Add data validation CSS -->
+<style>
+  #settings-modal .file-input::file-selector-button {
+      background: #4CAF50;
+      color: white;
+      padding: 8px 16px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+  }
+
+  #settings-modal .file-input:hover::file-selector-button {
+      background: #45a049;
+  }
+</style>
+<!-- Update your file input to accept Excel files -->
+<input type="file" id="file-input" accept=".xlsx, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet" hidden onchange="restoreData(event)">
+    <!-- Action Buttons -->
+    <div class="actions">
+      <!-- Add Student Modal -->
+      <div id="add-student-modal" class="fixed inset-0 bg-gray-800 bg-opacity-50 flex items-center justify-center hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+          <h2 class="text-2xl font-bold mb-4">Add Student</h2>
+          <form id="add-student-form">
+            <label class="block">Admission No.</label>
+            <input type="text" id="admission-no" class="border w-full p-2 mb-2" required style="color: white; background-color: #333;"/>
+  
+            <label class="block">Name</label>
+            <input type="text" id="student-name" class="border w-full p-2 mb-2" required style="color: white; background-color: #333;"/>
+  
+            <label class="block">Class</label>
+            <select id="student-class" class="border w-full p-2 mb-2" required>
+              <option value="Form 2">Form 2</option>
+              <option value="Form 3">Form 3</option>
+              <option value="Form 4">Form 4</option>
+            </select>
+  
+            <label class="block">Stream</label>
+            <select id="student-stream" class="border w-full p-2 mb-2" required>
+              <!-- Options will be populated by JavaScript -->
+            </select>
+  
+            <label class="block">Status</label>
+            <select id="Status" class="border w-full p-2 mb-4">
+              <option value="Normal">Normal</option>
+            </select>
+  
+            <label class="block">Leadership</label>
+            <select id="leadership" class="border w-full p-2 mb-4">
+              <option value="None">None</option>
+              <option value="Captain">Captain</option>
+              <option value="Sportsman">Sportsman</option>
+            </select>
+  
+            <label class="block">Religious Status</label>
+            <select id="religion" class="border w-full p-2 mb-4">
+              <option value="CU">CU</option>
+              <option value="Muslim">Muslim</option>
+              <option value="SDA">SDA</option>
+              <option value="YCS">YCS</option>
+            </select>
+  
+            <div class="flex justify-between  mt-4">
+              <button type="button" onclick="closeAddStudentModal()" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
+              <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Save</button>
+            </div>
+          </form>
+        </div>
+      </div>
+  
+      <!-- Add Student Button -->
+      <button onclick="openAddStudentModal()" class="bg-green-500 text-white px-4 py-2">Add Student</button>
+  
+      <script>
+        const streams = [
+          "Amherst",
+          "Berkley",
+          "Cambridge",
+          "Cape",
+          "Chicago",
+          "Columbia",
+          "Cornell",
+          "Dartmouth",
+          "Dayton",
+          "Duke",
+          "Edinburgh",
+          "Harvard",
+          "Hopkins",
+          "MIT",
+          "Michigan",
+          "Oxford",
+          "Pittsburgh",
+          "Princeton",
+          "Stanford",
+          "Yale",
+          "Zurich"
+        ].sort(); // Sort streams alphabetically
+
+        // Function to populate stream options
+        function populateStreamOptions() {
+          const classSelect = document.getElementById("class-select");
+          const streamSelect = document.getElementById("stream-select");
+          
+          // Clear previous stream options
+          streamSelect.innerHTML = '<option value="">Select Stream</option>';
+
+          // Get the selected class
+          const selectedClass = classSelect.value;
+
+          // Define streams for each class
+          const streamsByClass = {
+            "Form 2": streams,
+            "Form 3": streams,
+            "Form 4": streams
+          };
+
+          // Populate the stream dropdown based on the selected class
+          if (selectedClass && streamsByClass[selectedClass]) {
+            streamsByClass[selectedClass].forEach(stream => {
+              const option = document.createElement("option");
+              option.value = stream;
+              option.textContent = stream;
+              streamSelect.appendChild(option);
+            });
+          }
+        }
+
+        function openAddStudentModal() {
+          document.getElementById("add-student-modal").classList.remove("hidden");
+          populateStudentStreamOptions(); // Populate streams for the add student modal
+        }
+  
+        function closeAddStudentModal() {
+          document.getElementById("add-student-modal").classList.add("hidden");
+        }
+
+        function populateStudentStreamOptions() {
+          const studentClass = document.getElementById("student-class").value;
+          const studentStreamSelect = document.getElementById("student-stream");
+          studentStreamSelect.innerHTML = '<option value="">Select Stream</option>'; // Clear previous options
+
+          if (studentClass) {
+            streams.forEach(stream => {
+              const option = document.createElement("option");
+              option.value = stream;
+              option.textContent = stream;
+              studentStreamSelect.appendChild(option);
+            });
+          }
+        }
+        document.getElementById("add-student-form").addEventListener("submit", function(event) {
+    event.preventDefault(); // Prevent the default form submission
+
+    const admissionNo = document.getElementById("admission-no").value;
+    const name = document.getElementById("student-name").value;
+    const studentClass = document.getElementById("student-class").value;
+    const studentStream = document.getElementById("student-stream").value;
+    const status = document.getElementById("Status").value; // Correct ID
+    const religion = document.getElementById("religion").value;
+    const leadership = document.getElementById("leadership").value;
+    const lastUpdated = new Date().toISOString().split('T')[0];
+
+    // Debugging logs
+    console.log("Form submitted");
+    console.log("Admission No:", admissionNo);
+    console.log("Name:", name);
+    console.log("Class:", studentClass);
+    console.log("Stream:", studentStream);
+    console.log("Status:", status);
+
+    // Check for duplicate admission number
+    const students = JSON.parse(localStorage.getItem("students")) || [];
+    const duplicateStudent = students.find(student => student.admissionNo === admissionNo);
+    if (duplicateStudent) {
+        alert("A student with this admission number already exists.");
+        return; // Prevent adding the student
+    }
+
+    // Combine class and stream
+    const combinedClass = `${studentClass} ${studentStream}`;
+
+    const newStudent = {
+        admissionNo,
+        name,
+        class: combinedClass,
+        stream: studentStream,
+        status,
+        religious: religion,
+        leadership,
+        lastUpdated
+    };
+
+    // Add new student to the array
+    students.push(newStudent);
+
+    // Save updated students array back to localStorage
+    localStorage.setItem("students", JSON.stringify(students));
+     // Update the table and total count
+     loadDashboardData();
+          closeAddStudentModal();
+          showNotification("Student added successfully!"); // Show notification
+        });
+
+        function showNotification(message) {
+            const notification = document.createElement("div");
+            notification.className = "bg-green-500 text-white p-2 rounded mb-4";
+            notification.innerText = message;
+            document.body.prepend(notification);
+            setTimeout(() => notification.remove(), 3000); // Remove after 3 seconds
+        }
+
+        function printClassList() {
+          const selectedClass = document.getElementById("class-select").value;
+          const selectedStream = document.getElementById("stream-select").value;
+          const students = JSON.parse(localStorage.getItem("students")) || [];
+          
+          // Filter students by selected class and stream
+          const filteredStudents = students.filter(student => 
+            student.class === `${selectedClass} ${selectedStream}`
+          );
+          
+          if (filteredStudents.length === 0) {
+            alert("No students found in this class and stream.");
+            return;
+          }
+
+          // Sort students by admission number
+          filteredStudents.sort((a, b) => a.admissionNo.localeCompare(b.admissionNo));
+
+          // Create a printable HTML string
+          let printContent = '<div style="text-align: center;">';
+          printContent += '<img src="mangu_logo.jpg" alt="Mang\'u High School Logo" style="width: 100px; height: auto;"/>'; // Adjust logo size as needed
+          printContent += `<h1 style="text-decoration: underline; font-weight: bold;">${selectedClass} - ${selectedStream}</h1>`;
+          printContent += '</div>';
+
+          printContent += '<table style="width: 100%; border-collapse: collapse; margin-bottom: 20px;">';
+          printContent += '<tr><th style="border: 1px solid black; padding: 8px;">#</th><th style="border: 1px solid black; padding: 8px;">Admission No.</th><th style="border: 1px solid black; padding: 8px;">Name</th><th style="border: 1px solid black; padding: 8px;"></th></tr>';
+          
+          filteredStudents.forEach((student, index) => {
+            printContent += `<tr>
+              <td style="border: 1px solid black; padding: 8px;">${index + 1}</td>
+              <td style="border: 1px solid black; padding: 8px;">${student.admissionNo}</td>
+              <td style="border: 1px solid black; padding: 8px;">${student.name}</td>
+              <td style="border: 1px solid black; padding: 8px;"></td> <!-- Blank cell for data -->
+            </tr>`;
+          });
+          
+          printContent += '</table>';
+
+          // Open a new window for printing
+          const printWindow = window.open('', '', 'height=600,width=800');
+          printWindow.document.write('<html><head><title>Class Lists</title>');
+          printWindow.document.write('<style>body { font-family: Arial, sans-serif; } table { border: 1px solid black; width: 100%; border-collapse: collapse; } th, td { padding: 8px; text-align: left; border: 1px solid black; }</style>');
+          printWindow.document.write('</head><body>');
+          printWindow.document.write(printContent);
+          printWindow.document.write('</body></html>');
+          printWindow.document.close(); // Close the document
+          printWindow.print(); // Trigger the print dialog
+        }
+      </script>
+  
+      <!-- Delete Student Button -->
+      <button onclick="deleteStudent()" class="bg-red-500 text-white px-4 py-2">Delete Student</button>
+  
+      <script>
+        function deleteStudent() {
+          const admissionNo = prompt("Enter Admission No. of student to delete:");
+          
+          if (!admissionNo) return; // Exit if input is empty
+  
+          // Get existing students from localStorage
+          let students = JSON.parse(localStorage.getItem("students")) || [];
+          const initialLength = students.length;
+  
+          // Filter out the student to delete
+          students = students.filter(student => student.admissionNo !== admissionNo);
+  
+          // Save updated students array back to localStorage
+          localStorage.setItem("students", JSON.stringify(students));
+  
+          if (students.length < initialLength) {
+            alert("Student deleted successfully!");
+            loadDashboardData(); // Refresh the dashboard data
+          } else {
+            alert("Student not found. Check Admission No.");
+          }
+        }
+      </script>
+  
+      <!-- Update Student Button -->
+      <button id="update-student-btn" class="bg-gray-500 text-white px-4 py-2">Update Student</button>
+  
+      <!-- Update Student Form -->
+      <div id="update-student-form" class="fixed inset-0 flex items-center justify-center bg-gray-900 bg-opacity-50 hidden">
+        <div class="bg-white p-6 rounded-lg shadow-lg w-96">
+          <h2 class="text-2xl font-bold mb-4 text-center">Update Student</h2>
+          <form id="update-student">
+            <!-- Admission Number (Visible & Uneditable) -->
+            <form id="update-form">
+              <div class="mb-4">
+                <label class="block font-medium" for="update-admission-no">Admission Number</label>
+                <input type="text" id="update-admission-no" class="w-full p-2 border rounded font-mono bg-gray-200" readonly />
+              </div>
+            
+              <!-- Class -->
+              <div class="mb-4">
+                <label class="block font-medium" for="update-class">Class</label>
+                <select id="update-class" class="w-full p-2 border rounded" onchange="populateUpdateStreamOptions()">
+                  <option value="Form 2">Form 2</option>
+                  <option value="Form 3">Form 3</option>
+                  <option value="Form 4">Form 4</option>
+                </select>
+              </div>
+            
+              <!-- Stream -->
+              <div class="mb-4">
+                <label class="block font-medium" for="update-stream">Stream</label>
+                <select id="update-stream" class="border w-full p-2 mb-2">
+                  <option value="">Select Stream</option>
+                  <!-- Options will be populated by JavaScript -->
+                </select>
+              </div>
+            
+              <!-- Status -->
+              <div class="mb-4">
+                <label class="block font-medium" for="update-status">Status</label>
+                <select id="update-status" class="w-full p-2 border rounded">
+                  <option value="Normal">Normal</option>
+                  <option value="Suspended">Suspended</option>
+                  <option value="Sick">Sick</option>
+                </select>
+              </div>
+            
+              <!-- Religious Society -->
+              <div class="mb-4">
+                <label class="block font-medium" for="update-religious">Religious Society</label>
+                <select id="update-religious" class="w-full p-2 border rounded">
+                  <option value="CU">CU</option>
+                  <option value="Muslim">Muslim</option>
+                  <option value="SDA">SDA</option>
+                  <option value="YCS">YCS</option>
+                </select>
+              </div>
+            
+              <!-- Leadership -->
+              <div class="mb-4">
+                <label class="block font-medium" for="update-leadership">Leadership</label>
+                <select id="update-leadership" class="w-full p-2 border rounded">
+                  <option value="None">None</option>
+                  <option value="Captain">Captain</option>
+                  <option value="Sportsman">Sportsman</option>
+                </select>
+              </div>
+            
+              <!-- Buttons -->
+              <div class="flex justify-between mt-4">
+                <button type="button" onclick="updateStudent()" class="bg-blue-600 text-white px-4 py-2 rounded">Update</button>
+                <button type="button" onclick="closeUpdateForm()" class="bg-gray-500 text-white px-4 py-2 rounded">Cancel</button>
+              </div>
+            </form>                                                                                                                                                                                                                                                                                                                                                                                   
+          </form>
+        </div>
+  
+      <script>
+        // Show Update Student Form
+        function openUpdateForm(admissionNo) {
+          // Get existing students from localStorage
+          const students = JSON.parse(localStorage.getItem("students")) || [];
+          
+          // Find the student by admission number
+          const student = students.find(s => s.admissionNo === admissionNo);
+          
+          if (student) {
+            // Populate the form fields with the student's current data
+            document.getElementById("update-admission-no").value = student.admissionNo; // Set Admission No.
+            document.getElementById("update-class").value = student.class.split(" ")[0]; // Set class
+            populateUpdateStreamOptions(); // Populate streams for the update form
+            document.getElementById("update-stream").value = student.class.split(" ")[1]; // Set stream
+            document.getElementById("update-status").value = student.status; // Set status
+            document.getElementById("update-religious").value = student.religious; // Set religious society
+            document.getElementById("update-leadership").value = student.leadership; // Set leadership
+
+            // Show the update form
+            document.getElementById("update-student-form").classList.remove("hidden");
+          } else {
+            alert("Student not found.");
+          }
+        }
+  
+        // Hide Update Student Form
+        function closeUpdateForm() {
+          document.getElementById("update-student-form").classList.add("hidden");
+        }
+
+        function populateUpdateStreamOptions() {
+          const updateClass = document.getElementById("update-class").value;
+          const updateStreamSelect = document.getElementById("update-stream");
+          updateStreamSelect.innerHTML = '<option value="">Select Stream</option>'; // Clear previous options
+
+          // Define streams for each class
+          const streamsByClass = {
+            "Form 2": streams,
+            "Form 3": streams,
+            "Form 4": streams
+          };
+
+          // Populate the stream dropdown based on the selected class
+          if (updateClass && streamsByClass[updateClass]) {
+            streamsByClass[updateClass].forEach(stream => {
+              const option = document.createElement("option");
+              option.value = stream;
+              option.textContent = stream;
+              updateStreamSelect.appendChild(option);
+            });
+          }
+        }
+  
+        // Attach Event Listener to "Update Student" Button
+        document.getElementById("update-student-btn").addEventListener("click", function() {
+          const admissionNo = prompt("Enter Admission Number to Update:");
+          if (admissionNo) openUpdateForm(admissionNo);
+        });
+  
+        // Update Student Function
+        function updateStudent() {
+          let admissionNo = document.getElementById("update-admission-no").value;
+          let studentClass = document.getElementById("update-class").value; // Get selected class
+          let studentStream = document.getElementById("update-stream").value; // Get selected stream
+          let status = document.getElementById("update-status").value;
+          let religious = document.getElementById("update-religious").value;
+          let leadership = document.getElementById("update-leadership").value;
+
+          // Combine class and stream
+          const combinedClass = `${studentClass} ${studentStream}`;
+
+          // Get existing students from localStorage
+          const students = JSON.parse(localStorage.getItem("students")) || [];
+
+          // Find student in the array and update the values
+          const studentIndex = students.findIndex(s => s.admissionNo === admissionNo);
+          if (studentIndex !== -1) {
+            students[studentIndex].class = combinedClass; // Update to combined class
+            students[studentIndex].status = status;
+            students[studentIndex].religious = religious;
+            students[studentIndex].leadership = leadership;
+            students[studentIndex].lastUpdated = new Date().toISOString().split('T')[0]; // Update last updated date
+          }
+
+          // Save updated students array back to localStorage
+          localStorage.setItem("students", JSON.stringify(students));
+
+          // Update the table and close the update form
+          loadDashboardData();
+          closeUpdateForm();
+        }
+      </script>
+    </div>
+    <table class="w-full">
+      <thead>
+          <tr>
+              <th>Admission No.</th>
+              <th>Name</th>
+              <th>Class</th>
+              <th>Status</th>
+              <th>Religious Status</th>
+              <th>Leadership</th>
+              <th>Last Updated</th>
+          </tr>
+      </thead>
+      <tbody id="student-table">     
+     
+      </div>   
+
+
+      <script>
+function validateLogin(event) {
+    event.preventDefault(); // Prevent default form submission
+    const username = document.getElementById("username").value;
+    const password = document.getElementById("password").value;
+
+    if (username === "ADMIN2025" && password === "Mangu@1925") {
+        sessionStorage.setItem("loggedIn", "true");
+        showDashboard(); // Show dashboard on successful login
+    } else {
+        alert("Invalid username or password. Try again.");
+    }
+}
+
+function showDashboard() {
+    document.getElementById("login-form").style.display = "none"; // Hide the login form
+    document.getElementById("dashboard").style.display = "block"; // Show the dashboard
+    document.body.classList.remove("login-bg"); // Remove background change if needed
+    loadDashboardData(); // Populate dashboard data
+}
+
+function logout() {
+    sessionStorage.removeItem("loggedIn");
+    document.getElementById("dashboard").style.display = "none"; // Hide dashboard
+    document.getElementById("login-form").style.display = "flex"; // Show login form
+    document.body.classList.add("login-bg");
+}
+
+    
+        // Search for students in the table
+        function searchStudent() {
+            const searchQuery = document.getElementById("search-bar").value.toLowerCase();
+            const tableRows = document.querySelectorAll("#student-table tr");
+    
+            tableRows.forEach(row => {
+                const studentName = row.cells[1].innerText.toLowerCase();
+                const admissionNo = row.cells[0].innerText.toLowerCase();
+                const status = row.cells[3].innerText.toLowerCase();
+                const religiousStatus = row.cells[4].innerText.toLowerCase();
+    
+                if (studentName.includes(searchQuery) || admissionNo.includes(searchQuery) ||
+                    status.includes(searchQuery) || religiousStatus.includes(searchQuery)) {
+                    row.style.display = "";
+                } else {
+                    row.style.display = "none";
+                }
+            });
+        }
+    
+        // Load student data into the dashboard
+        function loadDashboardData() {
+            const students = JSON.parse(localStorage.getItem("students")) || [];
+    
+            // Sort students by admission number in ascending order
+            students.sort((a, b) => a.admissionNo.localeCompare(b.admissionNo, { numeric: true }));
+    
+            // Populate the student table
+            document.getElementById("student-table").innerHTML = students.map(s => `
+                <tr>
+                    <td>${s.admissionNo}</td>
+                    <td>${s.name}</td>
+                    <td>${s.class}</td>
+                    <td>${s.status}</td>
+                    <td>${s.religious}</td>
+                    <td>${s.leadership}</td>
+                    <td>${s.lastUpdated}</td>
+                </tr>
+            `).join("");
+    
+            // Update stats
+            updateStats(students);
+        }
+    
+        // Update statistics on the dashboard
+        function updateStats(students) {
+            const totalStudents = students.length;
+            const sentHomeCount = students.filter(student =>
+                student.status === 'Suspended' || student.status === 'Sick'
+            ).length;
+    
+            // Display total students and sent home count
+            document.getElementById('total-students').innerText = totalStudents;
+            document.getElementById('sent-home').innerText = sentHomeCount;
+        }
+    
+        // Save students to localStorage whenever updated
+        function saveStudents(students) {
+            localStorage.setItem('students', JSON.stringify(students));
+        }
+    
+        // Example usage: Add a new student to localStorage
+        function addStudent(newStudent) {
+            const students = JSON.parse(localStorage.getItem('students')) || [];
+            students.push(newStudent);
+            saveStudents(students);
+        }
+    
+        // Initialize dashboard on page load
+        window.onload = function () {
+    const dashboard = document.getElementById("dashboard");
+    const loginForm = document.getElementById("login-form");
+
+    // Check if user is logged in
+    if (sessionStorage.getItem("loggedIn")) {
+        showDashboard();  // Show dashboard if logged in
+    } else {
+        loginForm.style.display = "flex"; // Ensure login form is displayed
+        dashboard.style.display = "none"; // Ensure dashboard is hidden
+    }
+
+    // Set initial students data if none exist
+    if (!localStorage.getItem("students")) {
+        const initialStudents = [
+            {
+                "admissionNo": "12345",
+                "name": "John Doe",
+                "class": "2 Cornell",
+                 "religious": "None",
+                "leadership": "Sportsman",
+                "lastUpdated": "2023-10-01"
+            },
+            {
+               "status": "Sick",
+                "admissionNo": "12346",
+                "name": "Jane Smith",
+                "class": "2 Cornell",
+                "status": "Normal",
+                "religious": "Muslim",
+                "leadership": "Captain",
+                "lastUpdated": "2023-10-02"
+            }
+        ];
+        localStorage.setItem("students", JSON.stringify(initialStudents));
+    }
+};
+    </script>
+    
+        </body>
+        </html>
